@@ -28,11 +28,28 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Content Section */}
+      {/* Content Section with New Layout */}
       <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Left Column - SEO Content */}
+          {/* Top Row - Two Cards Side by Side */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            {/* Left Card - GROQ AI Guide */}
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+              <h2 className="text-2xl font-semibold text-medblue dark:text-white mb-4">
+                Getting Started with GROQ AI
+              </h2>
+              <div className="prose dark:prose-invert max-w-none">
+                <ol className="list-decimal pl-6 mb-4 text-gray-600 dark:text-gray-300">
+                  <li>Visit groq.com and create a free account</li>
+                  <li>Navigate to the API section in your dashboard</li>
+                  <li>Generate a new API key</li>
+                  <li>Copy your API key and keep it secure</li>
+                  <li>Use the key to access our AI-powered features</li>
+                </ol>
+              </div>
+            </div>
+
+            {/* Right Card - Question Bank */}
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
               <h2 className="text-2xl font-semibold text-medblue dark:text-white mb-4">
                 Free Medical Exam Question Bank
@@ -48,18 +65,12 @@ const Index = () => {
                   <li>USMLE: United States Medical Licensing Examination</li>
                   <li>MBBS Final Year Questions</li>
                 </ul>
-                <h3 className="text-xl font-semibold text-medblue dark:text-white mb-2">Getting Started with GROQ AI</h3>
-                <ol className="list-decimal pl-6 mb-4 text-gray-600 dark:text-gray-300">
-                  <li>Visit groq.com and create a free account</li>
-                  <li>Navigate to the API section in your dashboard</li>
-                  <li>Generate a new API key</li>
-                  <li>Copy your API key and keep it secure</li>
-                  <li>Use the key to access our AI-powered features</li>
-                </ol>
               </div>
             </div>
+          </div>
 
-            {/* Right Column - Blog Preview */}
+          {/* Bottom Row - Centered Card */}
+          <div className="max-w-3xl mx-auto">
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
               <h2 className="text-2xl font-semibold text-medblue dark:text-white mb-4 flex items-center gap-2">
                 <Book className="h-6 w-6" />
