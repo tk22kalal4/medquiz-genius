@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const baseUrl = import.meta.env.DEV ? '' : '/groqmed-quizmaster';
+
   return (
     <nav className="bg-white dark:bg-gray-900 shadow-md fixed w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,7 +37,7 @@ export const Navbar = () => {
             <ThemeToggle />
             <Button className="bg-medblue hover:bg-medblue/90 text-white flex items-center gap-2">
               <Lock className="h-4 w-4" />
-              <a href="../quiz/index.html" className="text-white">Login</a>
+              <a href={`${baseUrl}/quiz/`} className="text-white">Login</a>
             </Button>
           </div>
 
@@ -64,7 +66,7 @@ export const Navbar = () => {
             <Link to="/blog" className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">Blog</Link>
             <Link to="#" className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">Privacy Policy</Link>
             <Link to="#" className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">Disclaimer</Link>
-            <a href="../quiz/index.html" className="block px-3 py-2 text-white bg-medblue rounded-md">Login</a>
+            <a href={`${baseUrl}/quiz/`} className="block px-3 py-2 text-white bg-medblue rounded-md">Login</a>
           </div>
         </div>
       )}
