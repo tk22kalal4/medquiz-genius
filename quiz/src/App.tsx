@@ -8,7 +8,7 @@ import { AuthForm } from "@/components/AuthForm";
 
 const App = () => {
   return (
-    <Router>
+    <Router basename="/medquiz-genius/quiz">
       <Layout>
         <Routes>
           <Route path="/" element={<Index />} />

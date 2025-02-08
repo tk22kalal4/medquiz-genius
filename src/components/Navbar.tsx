@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const quizUrl = "/quiz/auth";
+  const quizUrl = "/medquiz-genius/quiz/auth";
 
   return (
     <nav className="bg-white dark:bg-gray-900 shadow-md fixed w-full z-50">
