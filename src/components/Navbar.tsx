@@ -35,7 +35,7 @@ export const Navbar = () => {
             <ThemeToggle />
             <Button className="bg-medblue hover:bg-medblue/90 text-white flex items-center gap-2">
               <Lock className="h-4 w-4" />
-              <Link to="../quiz/index.html" className="text-white">Login</Link>
+              <a href="../quiz/index.html" className="text-white">Login</a>
             </Button>
           </div>
 
@@ -64,7 +64,7 @@ export const Navbar = () => {
             <Link to="/blog" className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">Blog</Link>
             <Link to="#" className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">Privacy Policy</Link>
             <Link to="#" className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">Disclaimer</Link>
-            <Link to="#" className="block px-3 py-2 text-white bg-medblue rounded-md">Login</Link>
+            <a href="../quiz/index.html" className="block px-3 py-2 text-white bg-medblue rounded-md">Login</a>
           </div>
         </div>
       )}
