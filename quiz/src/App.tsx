@@ -2,7 +2,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { Toaster } from "@/components/ui/sonner";
-import Index from "@/pages/Index";
 import NotFound from "@/pages/NotFound";
 import { AuthForm } from "@/components/AuthForm";
 import { ApiKeyInput } from "@/components/ApiKeyInput";
@@ -21,6 +20,7 @@ const App = () => {
     checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed:", event, !!session);
       setIsAuthenticated(!!session);
     });
 

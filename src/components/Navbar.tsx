@@ -9,6 +9,10 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const quizUrl = "/medquiz-genius/quiz/auth";
 
+  const handleLogin = () => {
+    window.location.href = quizUrl;
+  };
+
   return (
     <nav className="bg-white dark:bg-gray-900 shadow-md fixed w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,9 +40,7 @@ export const Navbar = () => {
             <ThemeToggle />
             <Button 
               className="bg-medblue hover:bg-medblue/90 text-white flex items-center gap-2"
-              onClick={() => {
-                window.location.href = quizUrl;
-              }}
+              onClick={handleLogin}
             >
               <Lock className="h-4 w-4" />
               <span>Login</span>
@@ -72,9 +74,7 @@ export const Navbar = () => {
             <Link to="#" className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">Disclaimer</Link>
             <Button 
               className="w-full text-left px-3 py-2 text-white bg-medblue rounded-md"
-              onClick={() => {
-                window.location.href = quizUrl;
-              }}
+              onClick={handleLogin}
             >
               Login
             </Button>
