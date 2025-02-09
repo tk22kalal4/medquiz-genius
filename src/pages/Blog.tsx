@@ -44,7 +44,7 @@ const Blog = () => {
           {/* Featured Blog Posts */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
             <div id="neet-pg" className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-              <img src="/placeholder.svg" alt="NEET PG 2024 Preparation Guide" className="w-full h-48 object-cover" />
+              <img src="2132.jpg_wh300.jpg" alt="NEET PG 2024 Preparation Guide" className="w-full h-48 object-cover" />
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-medblue dark:text-white mb-3">
                   NEET PG 2024: Complete Preparation Strategy & Important Topics
