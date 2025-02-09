@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Blog from "./pages/Blog";
 import NotFound from "./pages/NotFound";
+import Auth from "./pages/Auth";
+import QuizSetup from "./pages/QuizSetup";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -26,7 +28,8 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/blog" element={<Blog />} />
-            <Route path="/quiz/*" element={<NotFound />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/quiz/setup" element={<QuizSetup />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />

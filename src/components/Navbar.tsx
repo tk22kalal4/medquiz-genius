@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Book, Info, Lock, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const quizUrl = "/medquiz-genius/quiz/auth";
+  const navigate = useNavigate();
 
   const handleLogin = () => {
-    window.location.href = quizUrl;
+    navigate("/auth");
   };
 
   return (
