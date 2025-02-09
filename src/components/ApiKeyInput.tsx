@@ -23,13 +23,13 @@ export const ApiKeyInput = ({ onSave }: { onSave: () => void }) => {
     
     try {
       // Store the API key securely (e.g., in session storage)
-      sessionStorage.setItem("groq_api_key", apiKey);
+      localStorage.setItem("groq_api_key", apiKey);
       
       toast.success("API key saved successfully!");
       onSave();
       
-      // Navigate to quiz
-      navigate("/quiz");
+      // Navigate back to home where quiz setup can begin
+      navigate("/");
     } catch (error) {
       console.error("Error saving API key:", error);
       toast.error("Failed to save API key");

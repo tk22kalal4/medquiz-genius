@@ -9,6 +9,7 @@ import Blog from "./pages/Blog";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import QuizSetup from "./pages/QuizSetup";
+import Quiz from "./pages/Quiz";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -30,6 +31,7 @@ const App = () => {
             <Route path="/blog" element={<Blog />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/quiz/setup" element={<QuizSetup />} />
+            <Route path="/quiz" element={<Quiz />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />

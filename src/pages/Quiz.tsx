@@ -1,13 +1,14 @@
 
-import { ApiKeyInput } from "@/components/ApiKeyInput";
-import { QuizSetupForm } from "@/components/QuizSetupForm";
-import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Navigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { Quiz as QuizComponent } from "@/components/Quiz";
 
-const QuizSetup = () => {
+const Quiz = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [hasApiKey, setHasApiKey] = useState<boolean>(false);
+  const location = useLocation();
+  const quizParams = location.state;
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -37,14 +38,18 @@ const QuizSetup = () => {
   }
 
   if (!hasApiKey) {
-    return <ApiKeyInput onSave={() => setHasApiKey(true)} />;
+    return <Navigate to="/quiz/setup" />;
+  }
+
+  if (!quizParams) {
+    return <Navigate to="/" />;
   }
 
   return (
-    <div className="min-h-screen bg-medbg dark:bg-gray-900 pt-16">
-      <QuizSetupForm />
+    <div className="min-h-screen bg-gray-50">
+      <QuizComponent {...quizParams} />
     </div>
   );
 };
 
-export default QuizSetup;
+export default Quiz;
