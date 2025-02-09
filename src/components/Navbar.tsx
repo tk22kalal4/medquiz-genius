@@ -34,9 +34,14 @@ export const Navbar = () => {
               <Link to="#" className="text-gray-700 dark:text-gray-300">Disclaimer</Link>
             </Button>
             <ThemeToggle />
-            <Button className="bg-medblue hover:bg-medblue/90 text-white flex items-center gap-2">
+            <Button 
+              className="bg-medblue hover:bg-medblue/90 text-white flex items-center gap-2"
+              onClick={() => {
+                window.location.href = quizUrl;
+              }}
+            >
               <Lock className="h-4 w-4" />
-              <a href={quizUrl}>Login</a>
+              <span>Login</span>
             </Button>
           </div>
 
@@ -65,7 +70,14 @@ export const Navbar = () => {
             <Link to="/blog" className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">Blog</Link>
             <Link to="#" className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">Privacy Policy</Link>
             <Link to="#" className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">Disclaimer</Link>
-            <a href={quizUrl} className="block px-3 py-2 text-white bg-medblue rounded-md">Login</a>
+            <Button 
+              className="w-full text-left px-3 py-2 text-white bg-medblue rounded-md"
+              onClick={() => {
+                window.location.href = quizUrl;
+              }}
+            >
+              Login
+            </Button>
           </div>
         </div>
       )}
