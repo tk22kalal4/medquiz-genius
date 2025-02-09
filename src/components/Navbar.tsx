@@ -36,7 +36,7 @@ export const Navbar = () => {
             <ThemeToggle />
             <Button className="bg-medblue hover:bg-medblue/90 text-white flex items-center gap-2">
               <Lock className="h-4 w-4" />
-              <a href={quizUrl} className="text-white">Login</a>
+              <a href={quizUrl}>Login</a>
             </Button>
           </div>
 
