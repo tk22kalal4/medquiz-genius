@@ -251,13 +251,12 @@ export const QuizSetupForm = ({ savedConfigs = [] }: QuizSetupFormProps) => {
         </div>
       </div>
 
-      <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
+      <div className="mt-8 flex justify-center">
         <Button
           onClick={handleStartQuiz}
           size="lg"
-          className="bg-medical-blue hover:bg-blue-700 text-white px-12 py-8 rounded-full text-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
+          className="bg-medical-blue hover:bg-blue-700 text-white px-16 py-6 rounded-lg text-xl font-semibold transition-all duration-200"
         >
-          <PlayCircle className="w-8 h-8 mr-3" />
           Start Quiz
         </Button>
       </div>
