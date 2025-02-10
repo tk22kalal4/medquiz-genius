@@ -6,6 +6,22 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+
+interface SavedConfig {
+  id: string;
+  subject: string;
+  chapter: string;
+  topic: string;
+  difficulty: string;
+  question_count: string;
+  time_limit: string;
+}
+
+interface QuizSetupFormProps {
+  savedConfigs?: SavedConfig[];
+}
 
 const subjects = [
   "Complete MBBS",
@@ -31,7 +47,7 @@ const difficultyLevels = ["Easy", "Medium", "Hard"];
 const questionCounts = ["5", "10", "15", "20", "30", "50", "No Limit"];
 const timePerQuestion = ["30", "45", "60", "90", "120", "No Limit"];
 
-export const QuizSetupForm = () => {
+export const QuizSetupForm = ({ savedConfigs = [] }: QuizSetupFormProps) => {
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const [selectedChapter, setSelectedChapter] = useState<string>("");
   const [specificTopic, setSpecificTopic] = useState<string>("");
@@ -40,7 +56,7 @@ export const QuizSetupForm = () => {
   const [timeLimit, setTimeLimit] = useState<string>("60");
   const navigate = useNavigate();
 
-  const handleStartQuiz = () => {
+  const handleStartQuiz = async () => {
     if (!selectedSubject) {
       toast.error("Please select a subject");
       return;
@@ -51,24 +67,91 @@ export const QuizSetupForm = () => {
       return;
     }
 
-    // Navigate to quiz page with settings
-    navigate("/quiz", {
-      state: {
-        subject: selectedSubject,
-        chapter: selectedChapter,
-        topic: specificTopic,
-        difficulty: difficulty.toLowerCase(),
-        questionCount,
-        timeLimit,
-      },
-    });
+    try {
+      // Save configuration
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { error } = await supabase.from('quiz_configurations').insert({
+          user_id: user.id,
+          subject: selectedSubject,
+          chapter: selectedChapter,
+          topic: specificTopic,
+          difficulty,
+          question_count: questionCount,
+          time_limit: timeLimit
+        });
+
+        if (error) throw error;
+      }
+
+      // Navigate to quiz page with settings
+      navigate("/quiz", {
+        state: {
+          subject: selectedSubject,
+          chapter: selectedChapter,
+          topic: specificTopic,
+          difficulty: difficulty.toLowerCase(),
+          questionCount,
+          timeLimit,
+        },
+      });
+    } catch (error: any) {
+      console.error('Error saving configuration:', error);
+      toast.error("Failed to save configuration");
+    }
+  };
+
+  const loadConfiguration = (config: SavedConfig) => {
+    setSelectedSubject(config.subject);
+    setSelectedChapter(config.chapter);
+    setSpecificTopic(config.topic || "");
+    setDifficulty(config.difficulty);
+    setQuestionCount(config.question_count);
+    setTimeLimit(config.time_limit);
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md space-y-6">
-      <h1 className="text-3xl font-bold text-medical-blue">
-        NEET PG Quiz Setup
-      </h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-medical-blue">
+          NEET PG Quiz Setup
+        </h1>
+        {savedConfigs.length > 0 && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline">Load Saved Configuration</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Saved Configurations</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 max-h-[400px] overflow-y-auto">
+                {savedConfigs.map((config) => (
+                  <div
+                    key={config.id}
+                    className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"
+                    onClick={() => {
+                      loadConfiguration(config);
+                      const dialogClose = document.querySelector('[data-radix-collection-item]');
+                      if (dialogClose instanceof HTMLElement) {
+                        dialogClose.click();
+                      }
+                    }}
+                  >
+                    <div className="font-medium">{config.subject}</div>
+                    <div className="text-sm text-gray-500">
+                      {config.chapter} {config.topic && `- ${config.topic}`}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      Difficulty: {config.difficulty}, Questions: {config.question_count}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">

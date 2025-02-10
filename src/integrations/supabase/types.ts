@@ -36,6 +36,53 @@ export type Database = {
         }
         Relationships: []
       }
+      quiz_configurations: {
+        Row: {
+          chapter: string
+          created_at: string
+          difficulty: string
+          id: string
+          question_count: string
+          subject: string
+          time_limit: string
+          topic: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          chapter: string
+          created_at?: string
+          difficulty: string
+          id?: string
+          question_count: string
+          subject: string
+          time_limit: string
+          topic?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          chapter?: string
+          created_at?: string
+          difficulty?: string
+          id?: string
+          question_count?: string
+          subject?: string
+          time_limit?: string
+          topic?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_configurations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
