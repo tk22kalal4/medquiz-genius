@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { PlayCircle } from "lucide-react";
 
 interface SavedConfig {
   id: string;
@@ -254,8 +255,10 @@ export const QuizSetupForm = ({ savedConfigs = [] }: QuizSetupFormProps) => {
       <div className="mt-8 flex justify-center">
         <Button
           onClick={handleStartQuiz}
-          className="bg-medical-blue hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-semibold"
+          size="lg"
+          className="bg-medical-blue hover:bg-blue-700 text-white px-8 py-6 rounded-lg text-xl font-semibold transition-all duration-200 transform hover:scale-105"
         >
+          <PlayCircle className="w-6 h-6 mr-2" />
           Start Quiz
         </Button>
       </div>
