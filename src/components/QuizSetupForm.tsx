@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -252,13 +251,13 @@ export const QuizSetupForm = ({ savedConfigs = [] }: QuizSetupFormProps) => {
         </div>
       </div>
 
-      <div className="mt-8 flex justify-center">
+      <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
         <Button
           onClick={handleStartQuiz}
           size="lg"
-          className="bg-medical-blue hover:bg-blue-700 text-white px-8 py-6 rounded-lg text-xl font-semibold transition-all duration-200 transform hover:scale-105"
+          className="bg-medical-blue hover:bg-blue-700 text-white px-12 py-8 rounded-full text-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
         >
-          <PlayCircle className="w-6 h-6 mr-2" />
+          <PlayCircle className="w-8 h-8 mr-3" />
           Start Quiz
         </Button>
       </div>

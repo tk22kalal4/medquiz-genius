@@ -1,9 +1,10 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trophy } from "lucide-react";
+import { Trophy, PlayCircle, ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 interface QuizResultsProps {
   score: number;
@@ -26,6 +27,7 @@ export const QuizResults = ({
 }: QuizResultsProps) => {
   const [userName, setUserName] = useState<string>("");
   const percentage = Math.round((score / totalQuestions) * 100);
+  const navigate = useNavigate();
   
   useEffect(() => {
     const fetchUserName = async () => {
@@ -70,14 +72,21 @@ export const QuizResults = ({
           <div className="text-2xl text-gray-600">
             {percentage}% Correct
           </div>
-          <div className="space-y-2">
-            <p className="text-gray-600">
-              Keep practicing to improve your medical knowledge.
-            </p>
+          <div className="flex justify-center gap-4 mt-8">
+            <Button 
+              onClick={() => navigate("/setup")}
+              size="lg"
+              className="bg-medical-blue hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-all duration-200 transform hover:scale-105"
+            >
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Back to Setup
+            </Button>
             <Button 
               onClick={onRestartQuiz}
-              className="mt-4 bg-medical-blue hover:bg-medical-blue/90"
+              size="lg"
+              className="bg-medical-blue hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-all duration-200 transform hover:scale-105"
             >
+              <PlayCircle className="w-5 h-5 mr-2" />
               Start New Quiz
             </Button>
           </div>
