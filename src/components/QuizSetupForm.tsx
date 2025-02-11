@@ -31,16 +31,41 @@ const subjects = [
   "Pathology",
   "Pharmacology",
   "Microbiology",
+  "FMT",
+  "PSM",
+  "Ophthalmology",
+  "Otorhinolaryngology",
   "Medicine",
   "Surgery",
-  "Obstetrics & Gynecology",
-  "Pediatrics"
+  "OBGY",
+  "Pediatrics",
+  "Orthopedics",
+  "Dermatology",
+  "Psychiatry",
+  "Radiology",
+  "Anesthesiology"
 ];
 
 const chapters = {
-  Anatomy: ["Complete Subject", "Head & Neck", "Thorax", "Abdomen", "Upper Limb", "Lower Limb", "Neuroanatomy"],
-  Physiology: ["Complete Subject", "General Physiology", "Blood", "Nerve-Muscle", "CNS", "CVS", "Respiratory", "Renal", "GIT", "Endocrine"],
-  // ... Add chapters for other subjects as needed
+  Anatomy: ["Complete Subject", "Head & Neck", "Thorax", "Abdomen", "Upper Limb", "Lower Limb", "Neuroanatomy", "Histology", "Embryology"],
+  Physiology: ["Complete Subject", "General Physiology", "Blood", "Nerve-Muscle", "CNS", "CVS", "Respiratory", "Renal", "GIT", "Endocrine", "Reproductive Physiology"],
+  Biochemistry: ["Complete Subject", "Cell Biology", "Enzymes", "Carbohydrate Metabolism", "Protein Metabolism", "Lipid Metabolism", "Molecular Biology", "Vitamins & Minerals", "Clinical Biochemistry"],
+  Pathology: ["Complete Subject", "General Pathology", "Hematology", "Systemic Pathology", "Neoplasia", "Immunopathology", "Clinical Pathology"],
+  Pharmacology: ["Complete Subject", "General Pharmacology", "Autonomic Nervous System", "Cardiovascular System", "CNS Pharmacology", "Chemotherapy", "Endocrine Pharmacology", "GIT Pharmacology", "Toxicology"],
+  Microbiology: ["Complete Subject", "General Microbiology", "Bacteriology", "Virology", "Mycology", "Parasitology", "Immunology", "Applied Microbiology"],
+  FMT: ["Complete Subject", "Forensic Pathology", "Toxicology", "Forensic Psychiatry", "Medical Jurisprudence", "Identification & DNA Fingerprinting"],
+  PSM: ["Complete Subject", "Epidemiology", "Biostatistics", "Communicable Diseases", "Non-Communicable Diseases", "Environmental Health", "Occupational Health", "Health Programs in India", "Maternal & Child Health"],
+  Ophthalmology: ["Complete Subject", "Anatomy & Physiology of Eye", "Refraction & Optics", "Cornea & Conjunctiva", "Lens & Cataract", "Retina & Vitreous", "Glaucoma", "Neuro-Ophthalmology", "Ocular Emergencies"],
+  Otorhinolaryngology: ["Complete Subject", "Ear Disorders", "Nasal Disorders", "Throat Disorders", "Head & Neck Oncology", "Audiology"],
+  Medicine: ["Complete Subject", "Cardiology", "Neurology", "Pulmonology", "Gastroenterology", "Nephrology", "Endocrinology", "Rheumatology", "Hematology", "Infectious Diseases"],
+  Surgery: ["Complete Subject", "General Surgery", "Gastrointestinal Surgery", "Hepatobiliary Surgery", "Cardiothoracic Surgery", "Neurosurgery", "Urology", "Plastic Surgery", "Pediatric Surgery"],
+  OBGY: ["Complete Subject", "Obstetrics", "Gynecology", "Reproductive Endocrinology", "Fetal Medicine", "Gynecologic Oncology"],
+  Pediatrics: ["Complete Subject", "Neonatology", "Growth & Development", "Pediatric Nutrition", "Pediatric Neurology", "Pediatric Cardiology", "Pediatric Infectious Diseases"],
+  Orthopedics: ["Complete Subject", "Fractures & Dislocations", "Spine Disorders", "Pediatric Orthopedics", "Arthritis", "Bone Tumors", "Orthopedic Trauma"],
+  Dermatology: ["Complete Subject", "Basic Dermatology", "Infections & Infestations", "Vesiculobullous Disorders", "Autoimmune Skin Diseases", "Dermatologic Surgery"],
+  Psychiatry: ["Complete Subject", "General Psychiatry", "Child Psychiatry", "Geriatric Psychiatry", "Substance Abuse", "Mood Disorders", "Schizophrenia", "Anxiety Disorders"],
+  Radiology: ["Complete Subject", "X-ray Imaging", "CT Scan", "MRI", "Ultrasound", "Nuclear Medicine", "Interventional Radiology"],
+  Anesthesiology: ["Complete Subject", "General Anesthesia", "Regional Anesthesia", "Pain Management", "Critical Care", "Emergency Anesthesia"]
 };
 
 const difficultyLevels = ["Easy", "Medium", "Hard"];
