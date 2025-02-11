@@ -4,7 +4,6 @@ import { Layout } from "@/components/Layout";
 import { Toaster } from "@/components/ui/sonner";
 import NotFound from "@/pages/NotFound";
 import { AuthForm } from "@/components/AuthForm";
-import { ApiKeyInput } from "@/components/ApiKeyInput";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import Index from "@/pages/Index";
@@ -16,12 +15,13 @@ const App = () => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setIsAuthenticated(!!session);
+      console.log("Initial auth check:", !!session); // Debug log
     };
     
     checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Auth state changed:", event, !!session);
+      console.log("Auth state changed:", event, !!session); // Debug log
       setIsAuthenticated(!!session);
     });
 
@@ -32,16 +32,20 @@ const App = () => {
     return <div>Loading...</div>;
   }
 
+  console.log("Rendering App, isAuthenticated:", isAuthenticated); // Debug log
+
   return (
     <Router>
       <Layout>
         <Routes>
-          <Route path="/" element={
-            isAuthenticated ? <Index /> : <Navigate to="/auth" />
-          } />
-          <Route path="/auth" element={
-            !isAuthenticated ? <AuthForm onAuthSuccess={() => {}} /> : <Navigate to="/" />
-          } />
+          <Route 
+            path="/" 
+            element={isAuthenticated ? <Index /> : <Navigate to="/auth" />} 
+          />
+          <Route 
+            path="/auth" 
+            element={!isAuthenticated ? <AuthForm onAuthSuccess={() => {}} /> : <Navigate to="/" />} 
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
