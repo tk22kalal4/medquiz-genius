@@ -7,32 +7,52 @@ import { AuthForm } from "@/components/AuthForm";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import Index from "@/pages/Index";
+import { toast } from "sonner";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setIsAuthenticated(!!session);
-      console.log("Initial auth check:", !!session); // Debug log
+    const initializeApp = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error("Session error:", error);
+          toast.error("Failed to initialize authentication");
+          setIsAuthenticated(false);
+        } else {
+          console.log("Initial auth check:", !!session);
+          setIsAuthenticated(!!session);
+        }
+      } catch (error) {
+        console.error("Initialization error:", error);
+        toast.error("Failed to initialize application");
+        setIsAuthenticated(false);
+      } finally {
+        setIsInitialized(true);
+      }
     };
     
-    checkAuth();
+    initializeApp();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Auth state changed:", event, !!session); // Debug log
+      console.log("Auth state changed:", event, !!session);
       setIsAuthenticated(!!session);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  if (isAuthenticated === null) {
-    return <div>Loading...</div>;
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-lg">Initializing application...</div>
+      </div>
+    );
   }
 
-  console.log("Rendering App, isAuthenticated:", isAuthenticated); // Debug log
+  console.log("Rendering App, isAuthenticated:", isAuthenticated);
 
   return (
     <Router>
