@@ -11,48 +11,34 @@ import { toast } from "sonner";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    const initializeApp = async () => {
+    const checkAuth = async () => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) {
-          console.error("Session error:", error);
-          toast.error("Failed to initialize authentication");
-          setIsAuthenticated(false);
-        } else {
-          console.log("Initial auth check:", !!session);
-          setIsAuthenticated(!!session);
-        }
+        const { data: { session } } = await supabase.auth.getSession();
+        setIsAuthenticated(!!session);
       } catch (error) {
-        console.error("Initialization error:", error);
-        toast.error("Failed to initialize application");
+        console.error("Auth error:", error);
         setIsAuthenticated(false);
-      } finally {
-        setIsInitialized(true);
       }
     };
-    
-    initializeApp();
+
+    checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Auth state changed:", event, !!session);
       setIsAuthenticated(!!session);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  if (!isInitialized) {
+  if (isAuthenticated === null) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-lg">Initializing application...</div>
+        <div className="text-lg">Loading...</div>
       </div>
     );
   }
-
-  console.log("Rendering App, isAuthenticated:", isAuthenticated);
 
   return (
     <Router>
