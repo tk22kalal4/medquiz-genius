@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  base: "/medquiz-genius/quiz/",
+  base: "/quiz/",
   plugins: [
     react(),
     mode === 'development' &&

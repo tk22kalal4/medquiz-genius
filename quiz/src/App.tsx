@@ -32,7 +32,7 @@ const App = () => {
   }
 
   return (
-    <Router basename="/medquiz-genius/quiz">
+    <Router basename="/quiz">
       <Layout>
         <Routes>
           <Route path="/" element={
