@@ -44,7 +44,7 @@ const Blog = () => {
           {/* Featured Blog Posts */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
             <div id="neet-pg" className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-              <img src="/2132.jpg_wh300.jpg" alt="NEET PG 2024 Preparation Guide" className="w-full h-48 object-cover" />
+              <img src="/Your paragraph text (1).png" alt="NEET PG 2024 Preparation Guide" className="w-full h-48 object-cover" />
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-medblue dark:text-white mb-3">
                   NEET PG 2024: Complete Preparation Strategy & Important Topics
@@ -61,7 +61,7 @@ const Blog = () => {
             </div>
 
             <div id="usmle" className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-              <img src="/placeholder.svg" alt="USMLE Step 1 Guide" className="w-full h-48 object-cover" />
+              <img src="/Your paragraph text (2).png" alt="USMLE Step 1 Guide" className="w-full h-48 object-cover" />
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-medblue dark:text-white mb-3">
                   USMLE Step 1: High-Yield Topics & Question Bank Analysis
@@ -78,7 +78,7 @@ const Blog = () => {
             </div>
 
             <div id="inicet" className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-              <img src="/placeholder.svg" alt="INICET Preparation Guide" className="w-full h-48 object-cover" />
+              <img src="/Your paragraph text (3).png" alt="INICET Preparation Guide" className="w-full h-48 object-cover" />
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-medblue dark:text-white mb-3">
                   INICET: Subject-wise Preparation Guide & Previous Year Analysis
@@ -98,7 +98,7 @@ const Blog = () => {
           {/* Additional Blog Posts */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div id="clinical-skills" className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-              <img src="/placeholder.svg" alt="Clinical Skills Development" className="w-full h-48 object-cover" />
+              <img src="/Your paragraph text (4).png" alt="Clinical Skills Development" className="w-full h-48 object-cover" />
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-medblue dark:text-white mb-3">
                   Essential Clinical Skills for Medical Practitioners
@@ -115,7 +115,7 @@ const Blog = () => {
             </div>
 
             <div id="research" className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-              <img src="/placeholder.svg" alt="Medical Research Guide" className="w-full h-48 object-cover" />
+              <img src="/Your paragraph text (5).png" alt="Medical Research Guide" className="w-full h-48 object-cover" />
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-medblue dark:text-white mb-3">
                   Medical Research & Publication Strategies
@@ -132,7 +132,7 @@ const Blog = () => {
             </div>
 
             <div id="career" className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-              <img src="/placeholder.svg" alt="Medical Career Guide" className="w-full h-48 object-cover" />
+              <img src="/Your paragraph text (6).png" alt="Medical Career Guide" className="w-full h-48 object-cover" />
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-medblue dark:text-white mb-3">
                   Specialized Medical Career Paths & Opportunities
