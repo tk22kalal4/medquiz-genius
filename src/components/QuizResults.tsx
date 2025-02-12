@@ -1,7 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Trophy, ArrowLeft } from "lucide-react";
+import { Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -71,13 +70,13 @@ export const QuizResults = ({
             {percentage}% Correct
           </div>
           <div className="mt-8">
-            <Button 
+            <button 
               onClick={() => navigate("/setup")}
-              className="w-64 h-16 bg-medical-blue hover:bg-blue-700 text-white text-xl font-semibold rounded-lg flex items-center justify-center gap-2"
+              className="relative px-12 py-4 text-xl font-bold text-white bg-gradient-to-r from-teal-400 to-emerald-500 rounded-full overflow-hidden shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
             >
-              <ArrowLeft className="w-6 h-6" />
-              Quiz Setup
-            </Button>
+              <span className="relative z-10">Let's Do Again</span>
+              <div className="absolute inset-0 bg-white opacity-20 transform rotate-12 translate-y-12"></div>
+            </button>
           </div>
         </CardContent>
       </Card>

@@ -6,8 +6,6 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { PlayCircle } from "lucide-react";
 
 interface SavedConfig {
   id: string;
@@ -229,12 +227,13 @@ export const QuizSetupForm = ({ savedConfigs = [] }: QuizSetupFormProps) => {
       </div>
 
       <div className="mt-8 flex justify-center">
-        <Button 
+        <button 
           onClick={handleStartQuiz}
-          className="bg-medical-blue hover:bg-blue-700 text-white px-8 py-6 rounded-lg text-xl font-semibold"
+          className="relative px-12 py-4 text-xl font-bold text-white bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full overflow-hidden shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
         >
-          Start Quiz
-        </Button>
+          <span className="relative z-10">Let's Do</span>
+          <div className="absolute inset-0 bg-white opacity-20 transform rotate-12 translate-y-12"></div>
+        </button>
       </div>
     </div>
   );
