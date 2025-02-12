@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { generateQuestion } from "@/services/groqService";
@@ -120,7 +119,6 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
       <QuizResults 
         score={score} 
         totalQuestions={parseInt(questionCount)} 
-        onRestartQuiz={handleRestartQuiz}
         subject={subject}
         chapter={chapter}
         topic={topic}
