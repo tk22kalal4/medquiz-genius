@@ -71,7 +71,7 @@ export const QuizResults = ({
           </div>
           <div className="mt-8">
             <button 
-              onClick={() => navigate("/setup")}
+              onClick={() => navigate("/quiz/setup")}
               className="relative px-12 py-4 text-xl font-bold text-white bg-gradient-to-r from-teal-400 to-emerald-500 rounded-full overflow-hidden shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
             >
               <span className="relative z-10">Let's Do Again</span>
