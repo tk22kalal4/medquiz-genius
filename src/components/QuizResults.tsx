@@ -73,11 +73,10 @@ export const QuizResults = ({
           <div className="mt-8">
             <Button 
               onClick={() => navigate("/setup")}
-              size="lg"
-              className="bg-medical-blue hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 flex items-center gap-2"
+              className="w-64 h-16 bg-medical-blue hover:bg-blue-700 text-white text-xl font-semibold rounded-lg flex items-center justify-center gap-2"
             >
-              <ArrowLeft className="w-5 h-5" />
-              Back to Quiz Setup
+              <ArrowLeft className="w-6 h-6" />
+              Quiz Setup
             </Button>
           </div>
         </CardContent>
