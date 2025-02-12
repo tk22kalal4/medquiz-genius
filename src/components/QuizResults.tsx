@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trophy, PlayCircle, ArrowLeft } from "lucide-react";
+import { Trophy, ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 interface QuizResultsProps {
   score: number;
   totalQuestions: number;
-  onRestartQuiz: () => void;
   subject: string;
   chapter: string;
   topic: string;
@@ -18,8 +17,7 @@ interface QuizResultsProps {
 
 export const QuizResults = ({ 
   score, 
-  totalQuestions, 
-  onRestartQuiz,
+  totalQuestions,
   subject,
   chapter,
   topic,
@@ -72,22 +70,14 @@ export const QuizResults = ({
           <div className="text-2xl text-gray-600">
             {percentage}% Correct
           </div>
-          <div className="flex justify-center gap-4 mt-8">
+          <div className="mt-8">
             <Button 
               onClick={() => navigate("/setup")}
               size="lg"
-              className="bg-medical-blue hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-all duration-200 transform hover:scale-105"
+              className="bg-medical-blue hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 flex items-center gap-2"
             >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Back to Setup
-            </Button>
-            <Button 
-              onClick={onRestartQuiz}
-              size="lg"
-              className="bg-medical-blue hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-all duration-200 transform hover:scale-105"
-            >
-              <PlayCircle className="w-5 h-5 mr-2" />
-              Start New Quiz
+              <ArrowLeft className="w-5 h-5" />
+              Back to Quiz Setup
             </Button>
           </div>
         </CardContent>

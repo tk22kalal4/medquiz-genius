@@ -280,8 +280,9 @@ export const QuizSetupForm = ({ savedConfigs = [] }: QuizSetupFormProps) => {
         <Button
           onClick={handleStartQuiz}
           size="lg"
-          className="bg-medical-blue hover:bg-blue-700 text-white px-16 py-6 rounded-lg text-xl font-semibold transition-all duration-200"
+          className="bg-medical-blue hover:bg-blue-700 text-white px-16 py-6 rounded-lg text-xl font-semibold transition-all duration-200 flex items-center gap-2"
         >
+          <PlayCircle className="w-6 h-6" />
           Start Quiz
         </Button>
       </div>
