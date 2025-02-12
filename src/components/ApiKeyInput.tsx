@@ -26,7 +26,7 @@ export const ApiKeyInput = ({ onSave }: { onSave: () => void }) => {
       toast.success("API key saved successfully!");
       onSave();
       // Change this navigation to go to the quiz setup page
-      navigate("/setup");
+      navigate("/quiz/setup");
     } catch (error) {
       console.error("Error saving API key:", error);
       toast.error("Failed to save API key");
