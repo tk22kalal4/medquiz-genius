@@ -9,11 +9,11 @@ export const Footer = () => {
             <h3 className="text-lg font-semibold text-medblue dark:text-white mb-4">Contact Us</h3>
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
               <Mail className="h-4 w-4" />
-              <a href="mailto:support@medquizai.site">support@medquizai.site</a>
+              <a href="mailto:mynextpulse123@gmail.com">mynextpulse123@gmail.com</a>
             </div>
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mt-2">
               <Github className="h-4 w-4" />
-              <a href="https://github.com/medquizai" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://telegram.me/+QiCvb-5pEJU1Mzc1" target="_blank" rel="noopener noreferrer">Telegram Channel</a>
             </div>
           </div>
           
