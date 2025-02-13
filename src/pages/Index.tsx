@@ -108,18 +108,21 @@ const Index = () => {
 
       {/* YouTube Video Space */}
       <section className="py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto">
-          <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
-            <iframe
-              src="https://youtu.be/B5NC8zQXesE?si=io7Vb0ltL3-FoNb1"
-              title="MedQuizAI Tutorial"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full"
-            ></iframe>
-          </div>
+      <div className="max-w-3xl mx-auto">
+        <div className="rounded-lg overflow-hidden">
+          <iframe
+            src="https://youtu.be/B5NC8zQXesE?si=io7Vb0ltL3-FoNb1"
+            title="MedQuizAI Tutorial"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            width="1280"  // Set custom width
+            height="720"  // Set custom height
+            className="w-full h-full"
+          ></iframe>
         </div>
-      </section>
+      </div>
+    </section>
+
 
       <Footer />
     </div>
