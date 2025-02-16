@@ -57,6 +57,7 @@ jobs:
           cp public/404.html dist/
           cp privacy-policy.html dist/
           cp Disclaimer.html dist/disclaimer.html
+          cp -r pages/* dist/pages/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
