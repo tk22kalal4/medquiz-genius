@@ -4,8 +4,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Medquiz: AI-Powered Medical Exam Question Bank</title>
+    <title>Medquiz:AI-Powered Medical Exam Question Bank</title>
 
+    <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5920367457745298"
      crossorigin="anonymous"></script>
 
@@ -34,8 +35,31 @@
     <!-- Base URL -->
     <base href="/" />
 
+    <!-- Prerender for SEO -->
+    <script>
+      // Create static versions of dynamic routes for SEO
+      const routes = ['/blog', '/quiz/setup'];
+      const currentPath = window.location.pathname;
+      
+      if (routes.includes(currentPath)) {
+        document.addEventListener('DOMContentLoaded', function() {
+          // Force render the content immediately for crawlers
+          const root = document.getElementById('root');
+          if (root && !root.hasChildNodes()) {
+            const meta = document.createElement('meta');
+            meta.setAttribute('name', 'robots');
+            meta.setAttribute('content', 'noindex, nofollow');
+            document.head.appendChild(meta);
+          }
+        });
+      }
+    </script>
+
     <!-- GitHub Pages SPA Redirect -->
     <script type="text/javascript">
+      // Single Page Apps for GitHub Pages
+      // MIT License
+      // https://github.com/rafgraph/spa-github-pages
       (function(l) {
         if (l.search[1] === '/' ) {
           var decoded = l.search.slice(1).split('&').map(function(s) { 
@@ -47,9 +71,6 @@
         }
       }(window.location))
     </script>
-
-    <!-- Lovable Script -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </head>
 
   <body>
