@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,6 +12,7 @@ import QuizSetup from "./pages/QuizSetup";
 import Quiz from "./pages/Quiz";
 import Privacy from "./pages/Privacy";
 import Disclaimer from "./pages/Disclaimer";
+import { ApiKeyInput } from "./components/ApiKeyInput";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +43,7 @@ const App = () => {
             <Route path="/" element={<Index />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/apikey" element={<ApiKeyInput onSave={() => {}} />} />
             <Route path="/quiz/setup" element={<QuizSetup />} />
             <Route path="/quiz" element={<Quiz />} />
             <Route path="/privacy-policy" element={<Privacy />} />
