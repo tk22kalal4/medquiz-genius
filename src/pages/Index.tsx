@@ -1,9 +1,12 @@
 
+import { useState, useEffect } from "react";
+import { ApiKeyInput } from "@/components/ApiKeyInput";
+import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Book } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -12,8 +15,10 @@ const Index = () => {
     navigate("/auth");
   };
 
-  const handleReadMore = () => {
-    navigate("/blog");
+  const handleResetApiKey = () => {
+    localStorage.removeItem("groq_api_key");
+    toast.success("API key removed successfully");
+    navigate("/apikey");
   };
 
   return (
@@ -29,15 +34,19 @@ const Index = () => {
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
             Comprehensive preparation for NEET PG, INICET, FMGE, USMLE, and MBBS with our intelligent quiz platform
           </p>
-          <div className="flex justify-center gap-4">
+          <div className="flex flex-col items-center gap-4">
             <Button 
               className="bg-medteal hover:bg-medteal/90 text-white"
               onClick={handleStartPractice}
             >
               Start Free Practice
             </Button>
-            <Button variant="outline">
-              How It Works
+            <Button 
+              variant="outline"
+              className="bg-white hover:bg-gray-100 text-medblue border-medblue"
+              onClick={handleResetApiKey}
+            >
+              Add New API Key
             </Button>
           </div>
         </div>
@@ -55,12 +64,11 @@ const Index = () => {
               </h2>
               <div className="prose dark:prose-invert max-w-none">
                 <ol className="list-decimal pl-6 mb-4 text-gray-600 dark:text-gray-300">
-                <li>Visit <a href="https://groq.com" target="_blank" rel="noopener noreferrer">groq.com</a> and create a free account</li>
-                <li>Navigate to the <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer">API section</a> in your dashboard</li>
-                <li>Generate a new API key</li>
-                <li>Copy your API key and keep it secure</li>
-                <li>Click on Login button in Nevigation bar and creat your account</li>                
-                <li>Insert your Groq AI api key and enjoy free unlimited question bank.</li>
+                  <li>Visit groq.com and create a free account</li>
+                  <li>Navigate to the API section in your dashboard</li>
+                  <li>Generate a new API key</li>
+                  <li>Copy your API key and keep it secure</li>
+                  <li>Use the key to access our AI-powered features</li>
                 </ol>
               </div>
             </div>
@@ -97,7 +105,7 @@ const Index = () => {
               </p>
               <Button 
                 className="w-full bg-medblue hover:bg-medblue/90 text-white"
-                onClick={handleReadMore}
+                onClick={() => navigate('/blog')}
               >
                 Read More
               </Button>
@@ -108,21 +116,18 @@ const Index = () => {
 
       {/* YouTube Video Space */}
       <section className="py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <div className="rounded-lg overflow-hidden">
-          <iframe
-            src="https://www.youtube.com/embed/B5NC8zQXesE"
-            title="MedQuizAI Tutorial"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            width="1280"  // Set custom width
-            height="720"  // Set custom height
-            className="w-full h-full"
-          ></iframe>
+        <div className="max-w-3xl mx-auto">
+          <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
+            <iframe
+              src="https://www.youtube.com/embed/9KHLTZaJcR8"
+              title="MedQuizAI Tutorial"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            ></iframe>
+          </div>
         </div>
-      </div>
-    </section>
-
+      </section>
 
       <Footer />
     </div>
