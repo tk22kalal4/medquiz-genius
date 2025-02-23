@@ -155,7 +155,7 @@ export const handleDoubt = async (
         messages: [
           {
             role: "system",
-            content: "You are a medical education expert who helps students understand concepts clearly. Provide detailed, accurate explanations for their doubts about medical questions."
+            content: "You are a medical education expert who helps students understand concepts clearly. Provide accurate explanations for their doubts about medical questions."
           },
           {
             role: "user",
@@ -167,11 +167,11 @@ Explanation: ${explanation}
 
 Student's Doubt: ${doubt}
 
-Please provide a clear, detailed explanation addressing this doubt. Include relevant medical concepts and clinical correlations when appropriate.`
+Please provide a clear explanation addressing this doubt. Include relevant medical concepts and clinical correlations when appropriate.`
           }
         ],
         temperature: 0.7,
-        max_tokens: 800
+        max_tokens: 500
       }),
     });
 
