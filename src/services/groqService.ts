@@ -171,7 +171,7 @@ Please provide a clear, detailed explanation addressing this doubt. Include rele
           }
         ],
         temperature: 0.7,
-        max_tokens: 1024
+        max_tokens: 800
       }),
     });
 
