@@ -1,0 +1,6 @@
+// <project-root>/app.json
+{
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-5920367457745298~6087552730"
+  }
+}
