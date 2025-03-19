@@ -7,11 +7,12 @@ import { Footer } from "@/components/Footer";
 import { Book } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import TestBannerAdComponent from "@/components/TestBannerAdComponent";
+import { HorizontalAd } from "@/components/ads/HorizontalAd";
+import { SquareAd } from "@/components/ads/SquareAd";
+import { VerticalAd } from "@/components/ads/VerticalAd";
 
 const Index = () => {
   const navigate = useNavigate();
-  const [showTestAd, setShowTestAd] = useState(false);
 
   const handleStartPractice = () => {
     navigate("/auth");
@@ -21,15 +22,6 @@ const Index = () => {
     localStorage.removeItem("groq_api_key");
     toast.success("API key removed successfully");
     navigate("/apikey");
-  };
-
-  const handleToggleTestAd = () => {
-    setShowTestAd(prev => !prev);
-    if (!showTestAd) {
-      toast.info("Test ad banner is now visible");
-    } else {
-      toast.info("Test ad banner is now hidden");
-    }
   };
 
   return (
@@ -59,20 +51,14 @@ const Index = () => {
             >
               Add New API Key
             </Button>
-            
-            <Button 
-              variant="outline"
-              className="bg-white hover:bg-gray-100 text-medblue border-medblue w-40"
-              onClick={handleToggleTestAd}
-            >
-              {showTestAd ? "Hide Test Ad" : "Show Test Ad"}
-            </Button>
-            
-            {/* Test Banner Ad Component */}
-            <TestBannerAdComponent isVisible={showTestAd} />
           </div>
         </div>
       </section>
+      
+      {/* Horizontal Ad below hero section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <HorizontalAd />
+      </div>
 
       {/* Content Section with New Layout */}
       <section className="py-12 px-4 sm:px-6 lg:px-8">
@@ -86,12 +72,11 @@ const Index = () => {
               </h2>
               <div className="prose dark:prose-invert max-w-none">
                 <ol className="list-decimal pl-6 mb-4 text-gray-600 dark:text-gray-300">
-                <li>Visit <a href="https://groq.com" target="_blank" rel="noopener noreferrer">groq.com</a> and create a free account</li>
-                <li>Navigate to the <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer">API section</a> in your dashboard</li>
-                <li>Generate a new API key</li>
-                <li>Copy your API key and keep it secure</li>
-                <li>Click on Login button in Nevigation bar and creat your account</li>                
-                <li>Insert your Groq AI api key and enjoy free unlimited question bank.</li>
+                  <li>Visit groq.com and create a free account</li>
+                  <li>Navigate to the API section in your dashboard</li>
+                  <li>Generate a new API key</li>
+                  <li>Copy your API key and keep it secure</li>
+                  <li>Use the key to access our AI-powered features</li>
                 </ol>
               </div>
             </div>
@@ -115,6 +100,11 @@ const Index = () => {
               </div>
             </div>
           </div>
+          
+          {/* Square Ad in the middle */}
+          <div className="mb-8">
+            <SquareAd />
+          </div>
 
           {/* Bottom Row - Centered Card */}
           <div className="max-w-3xl mx-auto">
@@ -137,21 +127,25 @@ const Index = () => {
         </div>
       </section>
 
-        <section className="py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <div className="rounded-lg overflow-hidden">
-          <iframe
-            src="https://www.youtube.com/embed/B5NC8zQXesE"
-            title="MedQuizAI Tutorial"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            width="1280"  // Set custom width
-            height="720"  // Set custom height
-            className="w-full h-full"
-          ></iframe>
+      {/* YouTube Video Space */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto">
+          <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
+            <iframe
+              src="https://www.youtube.com/embed/9KHLTZaJcR8"
+              title="MedQuizAI Tutorial"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            ></iframe>
+          </div>
         </div>
+      </section>
+      
+      {/* Vertical Ad near footer */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <VerticalAd />
       </div>
-    </section>
 
       <Footer />
     </div>
