@@ -41,22 +41,7 @@ const getRandomQuestionType = () => {
     "microbiological aspects",
     "laboratory diagnostics",
     "therapeutic approaches",
-    "epidemiological factors",
-    "clinical case diagnosis",
-    "pharmacology mechanism of action",
-    "surgical management steps",
-    "image-based anatomy identification",
-    "pathology findings interpretation",
-    "microbiology organism identification",
-    "diagnostic criteria",
-    "treatment protocols",
-    "medical emergencies management",
-    "obstetrics complications",
-    "pediatrics milestones",
-    "genetics inheritance patterns",
-    "immunology disorders",
-    "medical ethics scenarios",
-    "biostatistics calculations"
+    "epidemiological factors"
   ];
   return questionTypes[Math.floor(Math.random() * questionTypes.length)];
 };
@@ -77,13 +62,13 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
   const getDifficultyPrompt = (level: string) => {
     switch(level.toLowerCase()) {
       case 'easy':
-        return "Generate easy level questions focusing on basic concepts and fundamental knowledge from standard textbooks.";
+        return "Generate easy questions focus on basic concepts and fundamental knowledge from standard textbooks.";
       case 'medium':
         return "Generate a moderate difficulty question that combines theoretical knowledge with clinical applications.";
       case 'hard':
         return "Generate a complex clinical scenario-based question that requires integration of multiple concepts.";
       default:
-        return "Generate easy level questions focusing on basic concepts and fundamental knowledge from standard textbooks.";
+        return "Generate easy questions focus on basic concepts and fundamental knowledge from standard textbooks.";
     }
   };
 
