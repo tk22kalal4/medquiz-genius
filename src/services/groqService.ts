@@ -41,7 +41,22 @@ const getRandomQuestionType = () => {
     "microbiological aspects",
     "laboratory diagnostics",
     "therapeutic approaches",
-    "epidemiological factors"
+    "epidemiological factors",
+    "clinical case diagnosis",
+    "pharmacology mechanism of action",
+    "surgical management steps",
+    "image-based anatomy identification",
+    "pathology findings interpretation",
+    "microbiology organism identification",
+    "diagnostic criteria",
+    "treatment protocols",
+    "medical emergencies management",
+    "obstetrics complications",
+    "pediatrics milestones",
+    "genetics inheritance patterns",
+    "immunology disorders",
+    "medical ethics scenarios",
+    "biostatistics calculations"
   ];
   return questionTypes[Math.floor(Math.random() * questionTypes.length)];
 };
