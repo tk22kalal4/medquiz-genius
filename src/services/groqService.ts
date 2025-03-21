@@ -166,7 +166,7 @@ export const handleDoubt = async (
         "Authorization": `Bearer ${cleanedApiKey}`
       },
       body: JSON.stringify({
-        model: "mistral-saba-24b", // Updated to new model
+        model: "llama-3.1-8b-instant", // Updated to new model
         messages: [
           {
             role: "system",
@@ -185,7 +185,7 @@ Student's Doubt: ${doubt}
 Please provide a clear, detailed explanation addressing this doubt. Include relevant medical concepts and clinical correlations when appropriate.`
           }
         ],
-        temperature: 0.7,
+        temperature: 0.95,
         max_tokens: 1024
       }),
     });
