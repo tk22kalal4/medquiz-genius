@@ -89,7 +89,7 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
         "Authorization": `Bearer ${cleanedApiKey}`
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile", // Updated to new model
+        model: "gemma2-9b-it", // Updated to new model
         messages: [
           {
             role: "system",
