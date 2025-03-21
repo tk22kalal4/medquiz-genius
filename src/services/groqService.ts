@@ -77,7 +77,7 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
   const getDifficultyPrompt = (level: string) => {
     switch(level.toLowerCase()) {
       case 'easy':
-        return "Focus on basic concepts and fundamental knowledge from standard textbooks.";
+        return "Generate easy level questions focusing on basic concepts and fundamental knowledge from standard textbooks.";
       case 'medium':
         return "Generate a moderate difficulty question that combines theoretical knowledge with clinical applications.";
       case 'hard':
