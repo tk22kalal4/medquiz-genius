@@ -83,7 +83,7 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
       case 'hard':
         return "Generate a complex clinical scenario-based question that requires integration of multiple concepts.";
       default:
-        return "Focus on basic concepts and fundamental knowledge from standard textbooks.";
+        return "Generate easy level questions focusing on basic concepts and fundamental knowledge from standard textbooks.";
     }
   };
 
