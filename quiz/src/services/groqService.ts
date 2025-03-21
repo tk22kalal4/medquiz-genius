@@ -1,4 +1,3 @@
-
 import { toast } from "sonner";
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
@@ -62,13 +61,13 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
   const getDifficultyPrompt = (level: string) => {
     switch(level.toLowerCase()) {
       case 'easy':
-        return "Generate a basic MBBS level question focusing on fundamental concepts.";
+        return "Generate a easy basic MBBS level question focusing on fundamental concepts.";
       case 'medium':
         return "Generate a moderate difficulty question that combines theoretical knowledge with clinical applications.";
       case 'hard':
         return "Generate a complex clinical scenario-based question that requires integration of multiple concepts.";
       default:
-        return "Generate a basic MBBS level question.";
+        return "Generate a easy basic MBBS level question.";
     }
   };
 
