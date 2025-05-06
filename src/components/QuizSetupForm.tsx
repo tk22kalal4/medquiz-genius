@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -106,16 +107,19 @@ export const QuizSetupForm = ({ savedConfigs = [] }: QuizSetupFormProps) => {
         if (error) throw error;
       }
 
-      navigate("/quiz", {
-        state: {
-          subject: selectedSubject,
-          chapter: selectedChapter,
-          topic: specificTopic,
-          difficulty: difficulty.toLowerCase(),
-          questionCount,
-          timeLimit,
-        },
+      // Fix navigation to use the proper route pattern with URL parameters
+      const topicParam = specificTopic ? specificTopic : "all";
+      const chapterParam = selectedChapter ? selectedChapter : "all";
+      
+      // Add query parameters for additional options
+      const queryParams = new URLSearchParams({
+        difficulty: difficulty.toLowerCase(),
+        count: questionCount,
+        time: timeLimit
       });
+      
+      navigate(`/quiz/${encodeURIComponent(selectedSubject)}/${encodeURIComponent(chapterParam)}/${encodeURIComponent(topicParam)}?${queryParams.toString()}`);
+      
     } catch (error: any) {
       console.error('Error saving configuration:', error);
       toast.error("Failed to save configuration");
