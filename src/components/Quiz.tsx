@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { generateQuestion } from "@/services/groqService";
 import { toast } from "sonner";
@@ -9,6 +9,7 @@ import { InArticleAd } from "./ads/InArticleAd";
 import { QuizAd } from "./ads/QuizAd";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { Loader2, AlertCircle } from "lucide-react";
 
 interface QuizProps {
   subject: string;
@@ -19,7 +20,7 @@ interface QuizProps {
   timeLimit: string;
   quizId?: string;
   simultaneousResults?: boolean;
-  preloadedQuestions?: any[];
+  preloadedQuestions?: Question[];
 }
 
 interface Question {
@@ -53,6 +54,8 @@ export const Quiz = ({
   const [isQuizComplete, setIsQuizComplete] = useState(false);
   const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [retryAttempts, setRetryAttempts] = useState(0);
   const navigate = useNavigate();
 
   // Initialize quiz with preloaded questions or fetch new ones
@@ -101,30 +104,61 @@ export const Quiz = ({
     return "bg-white text-black font-normal";
   };
 
-  const loadQuestion = async () => {
+  const loadQuestion = useCallback(async () => {
     if (preloadedQuestions && preloadedQuestions.length > 0) {
       // For preloaded quiz, just move to the next question in the array
       if (questionNumber <= preloadedQuestions.length) {
         setCurrentQuestion(preloadedQuestions[questionNumber - 1]);
+        setIsLoading(false);
+        return;
       }
     } else {
-      // For AI-generated quiz, fetch a new question
+      // For AI-generated quiz, fetch a new question with retry logic
       setIsLoading(true);
-      const topicString = topic ? `${chapter} - ${topic}` : chapter;
-      const scope = chapter === "Complete Subject" ? subject : `${subject} - ${topicString}`;
-      const newQuestion = await generateQuestion(scope, difficulty);
+      setLoadError(null);
       
-      if (newQuestion) {
-        setCurrentQuestion(newQuestion);
-        // Add to questions array for result tracking
-        setQuestions(prev => [...prev, newQuestion]);
+      try {
+        const topicString = topic ? `${chapter} - ${topic}` : chapter;
+        const scope = chapter === "Complete Subject" ? subject : `${subject} - ${topicString}`;
+        const newQuestion = await generateQuestion(scope, difficulty);
+        
+        if (newQuestion) {
+          setCurrentQuestion(newQuestion);
+          // Add to questions array for result tracking
+          setQuestions(prev => [...prev, newQuestion]);
+          setIsLoading(false);
+        } else {
+          // If API returned null but no error was thrown
+          throw new Error("Failed to generate question");
+        }
+      } catch (error: any) {
+        console.error("Error loading question:", error);
+        
+        // Check if it's a rate limit error
+        if (error.message && error.message.includes("Rate limit reached")) {
+          setLoadError("GROQ API rate limit reached. Please wait a moment before trying again.");
+        } else {
+          setLoadError("Failed to load question. Please try again.");
+        }
+        
+        setIsLoading(false);
+        
+        // Auto-retry with exponential backoff if rate limited (max 3 retries)
+        if (retryAttempts < 3 && error.message && error.message.includes("Rate limit reached")) {
+          const delay = Math.pow(2, retryAttempts) * 1000;
+          toast.info(`Rate limit reached. Retrying in ${delay/1000} seconds...`);
+          
+          setTimeout(() => {
+            setRetryAttempts(prev => prev + 1);
+            loadQuestion();
+          }, delay);
+        }
       }
-      setIsLoading(false);
     }
     
     setSelectedAnswer(null);
     setShowExplanation(false);
-  };
+  }, [questionNumber, preloadedQuestions, chapter, topic, subject, difficulty, retryAttempts]);
 
   const handleAnswerSelect = (answer: string) => {
     if (!selectedAnswer && timeRemaining !== 0) {
@@ -188,6 +222,12 @@ export const Quiz = ({
     }
     
     setQuestionNumber(prev => prev + 1);
+    setRetryAttempts(0); // Reset retry attempts for the new question
+    loadQuestion();
+  };
+
+  const handleRetry = () => {
+    setRetryAttempts(0);
     loadQuestion();
   };
 
@@ -200,6 +240,7 @@ export const Quiz = ({
       setQuestions([]);
     }
     setTimeRemaining(timeLimit !== "No Limit" ? parseInt(timeLimit) : null);
+    setRetryAttempts(0);
     
     if (preloadedQuestions && preloadedQuestions.length > 0) {
       setCurrentQuestion(preloadedQuestions[0]);
@@ -235,12 +276,29 @@ export const Quiz = ({
     );
   }
 
-  if (isLoading || !currentQuestion) {
-    return <div className="text-center p-8">Loading question...</div>;
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin text-medblue mb-4" />
+        <p>Loading question...</p>
+      </div>
+    );
+  }
+
+  if (loadError || !currentQuestion) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8">
+        <AlertCircle className="h-8 w-8 text-red-500 mb-4" />
+        <p className="text-red-500 mb-4">{loadError || "Failed to load question"}</p>
+        <Button onClick={handleRetry} className="bg-medblue hover:bg-medblue/90">
+          Try Again
+        </Button>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6 mt-16">
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
       {/* Top Ad */}
       <QuizAd className="mb-4" />
       

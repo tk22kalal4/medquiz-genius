@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Quiz } from "@/components/Quiz";
+import { Loader2 } from "lucide-react";
 
 interface QuizDisplayProps {
   quizTitle: string;
@@ -33,6 +34,8 @@ export const QuizDisplay = ({
   formattedQuestions
 }: QuizDisplayProps) => {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
   
   // Transform our formatted questions to match Quiz component's expected format
   const transformedQuestions = formattedQuestions.map(q => ({
@@ -57,11 +60,43 @@ export const QuizDisplay = ({
     // Set loading to false once questions are ready
     if (formattedQuestions.length > 0) {
       setLoading(false);
+      setError(null);
     }
   }, [formattedQuestions]);
+
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
+    setLoading(true);
+    setError(null);
+    
+    // Simulate a delay before retrying
+    setTimeout(() => {
+      if (formattedQuestions.length > 0) {
+        setLoading(false);
+      } else {
+        setError("Still unable to load questions. Please try again later.");
+      }
+    }, 2000);
+  };
   
   if (loading && formattedQuestions.length === 0) {
-    return <div className="text-center p-6">Loading questions...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center p-12">
+        <Loader2 className="h-12 w-12 animate-spin text-medblue mb-4" />
+        <p className="text-center text-lg">Loading questions...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12">
+        <p className="text-center text-lg text-red-500 mb-4">{error}</p>
+        <Button onClick={handleRetry} className="bg-medblue hover:bg-medblue/90">
+          Retry Loading Questions
+        </Button>
+      </div>
+    );
   }
   
   return (
@@ -80,17 +115,26 @@ export const QuizDisplay = ({
         </div>
       </Card>
       
-      <Quiz
-        subject={quizTitle}
-        chapter="Custom Quiz"
-        topic=""
-        difficulty="medium"
-        questionCount={questionCount.toString()}
-        timeLimit={totalTime}
-        quizId={quizId}
-        simultaneousResults={true}
-        preloadedQuestions={transformedQuestions}
-      />
+      {formattedQuestions.length > 0 ? (
+        <Quiz
+          subject={quizTitle}
+          chapter="Custom Quiz"
+          topic=""
+          difficulty="medium"
+          questionCount={questionCount.toString()}
+          timeLimit={totalTime}
+          quizId={quizId}
+          simultaneousResults={true}
+          preloadedQuestions={transformedQuestions}
+        />
+      ) : (
+        <div className="text-center p-6 bg-white rounded-lg shadow-md">
+          <p className="text-lg mb-4">No questions available for this quiz.</p>
+          <Button onClick={handleRetry} className="bg-medblue hover:bg-medblue/90">
+            Try Again
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
