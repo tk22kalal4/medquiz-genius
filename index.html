@@ -6,9 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Medquiz:AI-Powered Medical Exam Question Bank</title>
 
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5920367457745298"
-     crossorigin="anonymous"></script>
+    <!-- Google AdSense - Only load in production -->
+    <script>
+      // Only load AdSense in production environments
+      if (window.location.hostname !== 'localhost' && 
+          !window.location.hostname.includes('127.0.0.1') &&
+          !window.location.hostname.includes('.lovable.dev')) {
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5920367457745298";
+        script.crossOrigin = "anonymous";
+        document.head.appendChild(script);
+      }
+    </script>
 
     <!-- SEO Meta Tags -->
     <meta name="description" content="Medquiz is an AI-powered free medical question bank for NEET PG, INI-CET, FMGE, USMLE, and MBBS students. Practice high-quality, AI-generated medical MCQs with explanations." />
@@ -71,6 +81,9 @@
         }
       }(window.location))
     </script>
+    
+    <!-- Script for GPT Engineer Select feature -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </head>
 
   <body>
