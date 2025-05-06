@@ -4,19 +4,14 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ApiKeyInput as ApiKeyInputComponent } from "@/components/ApiKeyInput";
 import { toast } from "sonner";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ApiKeyInput = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  
-  // Get the redirectTo from location state or default to "/quiz/setup"
-  const redirectTo = location.state?.redirectTo || "/quiz/setup";
   
   const handleSaveApiKey = () => {
     toast.success("API key saved successfully!");
-    // Navigate to the quiz setup page
-    navigate(redirectTo);
+    navigate("/quiz/setup");
   };
 
   return (
