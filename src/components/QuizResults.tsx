@@ -1,34 +1,76 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
-import { SquareAd } from "./ads/SquareAd";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface QuizResultsProps {
   score: number;
   totalQuestions: number;
+  onRestartQuiz?: () => void;
   subject: string;
   chapter: string;
   topic: string;
   difficulty: string;
+  questions?: any[];
+  answers?: Record<number, string>;
+  quizId?: string;
 }
 
 export const QuizResults = ({ 
   score, 
-  totalQuestions,
+  totalQuestions, 
+  onRestartQuiz,
   subject,
   chapter,
   topic,
-  difficulty
+  difficulty,
+  questions = [],
+  answers = {},
+  quizId
 }: QuizResultsProps) => {
   const [userName, setUserName] = useState<string>("");
-  const percentage = Math.round((score / totalQuestions) * 100);
-  const navigate = useNavigate();
+  const [rankings, setRankings] = useState<any[]>([]);
+  const [calculatedScore, setCalculatedScore] = useState<number>(score);
+  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number | null>(null);
+  const [showExplanation, setShowExplanation] = useState(false);
+  const percentage = Math.round((calculatedScore / totalQuestions) * 100);
   
   useEffect(() => {
-    const fetchUserName = async () => {
+    console.log("QuizResults received:", {
+      score,
+      totalQuestions,
+      answers,
+      questions: questions?.map(q => ({ 
+        question: q.question,
+        correctAnswer: q.correctAnswer
+      }))
+    });
+    
+    // Double-check the score by counting correct answers
+    if (questions && questions.length > 0 && Object.keys(answers).length > 0) {
+      let correctCount = 0;
+      
+      Object.entries(answers).forEach(([index, answer]) => {
+        const questionIndex = parseInt(index);
+        if (questionIndex < questions.length) {
+          const question = questions[questionIndex];
+          if (question && answer === question.correctAnswer) {
+            correctCount++;
+          }
+        }
+      });
+      
+      console.log("Calculated score from answers:", correctCount);
+      if (correctCount !== score) {
+        console.warn("Score mismatch, using calculated score:", correctCount, "vs provided:", score);
+        setCalculatedScore(correctCount);
+      }
+    }
+    
+    const fetchUserDataAndRankings = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         
@@ -39,15 +81,52 @@ export const QuizResults = ({
             .eq('id', user.id)
             .single();
           
-          setUserName(userData?.name || 'User');
+          if (userData) {
+            setUserName(userData.name || 'User');
+          }
+        }
+        
+        if (quizId) {
+          const { data: resultsData } = await supabase
+            .from('quiz_results')
+            .select('*')
+            .eq('quiz_id', quizId)
+            .order('score', { ascending: false });
+            
+          if (resultsData) {
+            const userIds = resultsData
+              .filter(r => r.user_id)
+              .map(r => r.user_id);
+            
+            const { data: profilesData } = await supabase
+              .from('profiles')
+              .select('id, college_name')
+              .in('id', userIds);
+              
+            const userCollegeMap = new Map();
+            if (profilesData) {
+              profilesData.forEach(profile => {
+                userCollegeMap.set(profile.id, profile.college_name);
+              });
+            }
+            
+            const formattedRankings = resultsData.map(result => ({
+              ...result,
+              college_name: result.user_id && userCollegeMap.has(result.user_id) 
+                ? userCollegeMap.get(result.user_id) 
+                : 'Not specified'
+            }));
+            
+            setRankings(formattedRankings);
+          }
         }
       } catch (error: any) {
-        console.error('Error fetching user name:', error);
+        console.error('Error fetching data:', error);
       }
     };
     
-    fetchUserName();
-  }, []);
+    fetchUserDataAndRankings();
+  }, [quizId, score, totalQuestions, questions, answers]);
   
   return (
     <div className="max-w-2xl mx-auto p-6">
@@ -65,25 +144,124 @@ export const QuizResults = ({
             </div>
           )}
           <div className="text-4xl font-bold text-medical-blue">
-            {score} / {totalQuestions}
+            {calculatedScore} / {totalQuestions}
           </div>
           <div className="text-2xl text-gray-600">
             {percentage}% Correct
           </div>
           
-          {/* Ad within results */}
-          <div className="my-4">
-            <SquareAd />
-          </div>
+          {questions.length > 0 && (
+            <div className="mt-4">
+              <h3 className="text-xl font-semibold mb-4 text-left">Question Analysis</h3>
+              
+              <div className="flex flex-wrap gap-2 mb-4 justify-center">
+                {questions.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`h-10 w-10 rounded-full flex items-center justify-center text-sm ${
+                      index === selectedQuestionIndex
+                        ? 'bg-medical-blue text-white'
+                        : 'bg-gray-100 border'
+                    }`}
+                    onClick={() => {
+                      setSelectedQuestionIndex(index);
+                      setShowExplanation(false);
+                    }}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+              </div>
+              
+              {selectedQuestionIndex !== null && (
+                <div className="p-4 border rounded-lg">
+                  <p className="font-medium">{questions[selectedQuestionIndex].question}</p>
+                  <div className="mt-4 space-y-2">
+                    {questions[selectedQuestionIndex].options.map((option: string, idx: number) => {
+                      const optionLetter = option[0];
+                      const isUserAnswer = answers[selectedQuestionIndex] === optionLetter;
+                      const isCorrectAnswer = questions[selectedQuestionIndex].correctAnswer === optionLetter;
+                      
+                      return (
+                        <div 
+                          key={idx}
+                          className={`p-3 rounded border ${
+                            isCorrectAnswer 
+                              ? 'bg-green-50 border-green-300' 
+                              : isUserAnswer && !isCorrectAnswer
+                              ? 'bg-red-50 border-red-300'
+                              : 'bg-gray-50'
+                          }`}
+                        >
+                          {option}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  <Button
+                    onClick={() => setShowExplanation(!showExplanation)}
+                    variant="outline"
+                    className="mt-4"
+                  >
+                    {showExplanation ? "Hide" : "Show"} Explanation
+                  </Button>
+                  
+                  {showExplanation && (
+                    <div className="mt-4 p-4 bg-blue-50 rounded-md">
+                      <p>{questions[selectedQuestionIndex].explanation}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
           
-          <div className="mt-8">
-            <button 
-              onClick={() => navigate("/quiz/setup")}
-              className="relative px-12 py-4 text-xl font-bold text-white bg-gradient-to-r from-teal-400 to-emerald-500 rounded-full overflow-hidden shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
-            >
-              <span className="relative z-10">Let's Do Again</span>
-              <div className="absolute inset-0 bg-white opacity-20 transform rotate-12 translate-y-12"></div>
-            </button>
+          {rankings.length > 0 && (
+            <div className="mt-8">
+              <h3 className="text-xl font-semibold mb-4">Leaderboard</h3>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Rank</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>College</TableHead>
+                    <TableHead className="text-right">Score</TableHead>
+                    <TableHead className="text-right">Percentage</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {rankings.map((ranking, index) => {
+                    const rankPercentage = Math.round((ranking.score / ranking.total_questions) * 100);
+                    return (
+                      <TableRow key={index}>
+                        <TableCell>
+                          {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}`}
+                        </TableCell>
+                        <TableCell className="font-medium">{ranking.user_name}</TableCell>
+                        <TableCell>{ranking.college_name}</TableCell>
+                        <TableCell className="text-right">{ranking.score}/{ranking.total_questions}</TableCell>
+                        <TableCell className="text-right">{rankPercentage}%</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+          
+          <div className="space-y-2">
+            <p className="text-gray-600">
+              Keep practicing to improve your medical knowledge.
+            </p>
+            {onRestartQuiz && (
+              <Button 
+                onClick={onRestartQuiz}
+                className="mt-4 bg-medical-blue hover:bg-medical-blue/90"
+              >
+                Start New Quiz
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
