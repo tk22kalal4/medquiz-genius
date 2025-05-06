@@ -9,7 +9,7 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   const handleStartPractice = () => {
-    navigate("/auth");
+    navigate("/auth", { state: { redirectTo: "/quiz/setup" } });
   };
 
   const handleCreateQuiz = () => {
