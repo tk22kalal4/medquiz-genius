@@ -62,13 +62,13 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
   const getDifficultyPrompt = (level: string) => {
     switch(level.toLowerCase()) {
       case 'easy':
-        return "Focus on basic concepts and fundamental knowledge from standard textbooks.";
+        return "Generate easy, straightforward and basic most repeatative questions from standard textbooks.";
       case 'medium':
         return "Generate a moderate difficulty question that combines theoretical knowledge with clinical applications.";
       case 'hard':
         return "Generate a complex clinical scenario-based question that requires integration of multiple concepts.";
       default:
-        return "Focus on basic concepts and fundamental knowledge from standard textbooks.";
+        return "Generate easy, straightforward and basic most repeatative questions from standard textbooks.";
     }
   };
 
@@ -198,7 +198,7 @@ Please provide a clear, detailed explanation addressing this doubt. Include rele
           }
         ],
         temperature: 0.7,
-        max_tokens: 1024
+        max_tokens: 500
       }),
     });
 
