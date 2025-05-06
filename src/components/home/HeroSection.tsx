@@ -9,6 +9,7 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   const handleStartPractice = () => {
+    // Make sure to pass redirectTo state parameter
     navigate("/auth", { state: { redirectTo: "/quiz/setup" } });
   };
 

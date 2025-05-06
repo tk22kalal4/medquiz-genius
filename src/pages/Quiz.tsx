@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Quiz as QuizComponent } from "@/components/Quiz";
@@ -8,6 +8,7 @@ import { Loader2 } from "lucide-react";
 
 const Quiz = () => {
   const { subject, chapter, topic } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [difficulty, setDifficulty] = useState("medium");
@@ -16,8 +17,8 @@ const Quiz = () => {
   const [simultaneousResults, setSimultaneousResults] = useState(true);
 
   useEffect(() => {
-    // Load parameters from URL or session storage
-    const searchParams = new URLSearchParams(window.location.search);
+    // Parse query parameters from URL
+    const searchParams = new URLSearchParams(location.search);
     const difficultyParam = searchParams.get("difficulty");
     const questionCountParam = searchParams.get("count");
     const timeLimitParam = searchParams.get("time");
@@ -29,7 +30,7 @@ const Quiz = () => {
     if (simultaneousParam) setSimultaneousResults(simultaneousParam === "true");
 
     setTimeout(() => setIsLoading(false), 500);
-  }, []);
+  }, [location.search]);
 
   if (isLoading) {
     return (
@@ -39,6 +40,10 @@ const Quiz = () => {
     );
   }
 
+  const decodedSubject = subject ? decodeURIComponent(subject) : "General Medicine";
+  const decodedChapter = chapter && chapter !== "all" ? decodeURIComponent(chapter) : "All Topics";
+  const decodedTopic = topic && topic !== "all" ? decodeURIComponent(topic) : "";
+
   return (
     <div className="min-h-screen bg-medbg dark:bg-gray-900">
       <Navbar />
@@ -46,13 +51,13 @@ const Quiz = () => {
       <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl font-bold text-medblue mb-6">
-            {subject || "Medical"} Quiz
+            {decodedSubject} Quiz
           </h1>
           
           <QuizComponent
-            subject={subject || "General Medicine"}
-            chapter={chapter || "All Topics"}
-            topic={topic || ""}
+            subject={decodedSubject}
+            chapter={decodedChapter}
+            topic={decodedTopic}
             difficulty={difficulty}
             questionCount={questionCount}
             timeLimit={timeLimit}

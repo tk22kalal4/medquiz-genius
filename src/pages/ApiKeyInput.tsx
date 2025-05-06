@@ -15,6 +15,7 @@ const ApiKeyInput = () => {
   
   const handleSaveApiKey = () => {
     toast.success("API key saved successfully!");
+    // Navigate to the quiz setup page
     navigate(redirectTo);
   };
 
