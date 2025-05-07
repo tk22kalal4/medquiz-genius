@@ -63,6 +63,7 @@ const Quiz = () => {
             timeLimit={timeLimit}
             simultaneousResults={simultaneousResults}
             quizId="generated-quiz"
+            enableDoubtChat={true} // Enable doubt chat for AI-generated quizzes
           />
         </div>
       </div>

@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { generateQuestion, handleDoubt } from "@/services/groqService";
@@ -43,7 +42,7 @@ export const Quiz = ({
   quizId,
   simultaneousResults = false,
   preloadedQuestions = [],
-  enableDoubtChat = false
+  enableDoubtChat = true
 }: QuizProps) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);

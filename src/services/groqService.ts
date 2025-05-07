@@ -205,7 +205,7 @@ export const handleDoubt = async (
         messages: [
           {
             role: "system",
-            content: "You are a medical education expert who helps students understand concepts clearly. Provide detailed, accurate explanations for their doubts about medical questions."
+            content: "You are a medical education expert who helps students understand concepts clearly. Provide detailed, accurate but concise explanations for their doubts about medical questions. Be straightforward and get directly to the point."
           },
           {
             role: "user",
@@ -217,7 +217,7 @@ Explanation: ${explanation}
 
 Student's Doubt: ${doubt}
 
-Please provide a clear, detailed explanation addressing this doubt. Include relevant medical concepts and clinical correlations when appropriate.`
+Please provide a clear, concise explanation addressing this doubt. Include relevant medical concepts and clinical correlations when appropriate, but be direct and straightforward.`
           }
         ],
         temperature: 0.7,
