@@ -1,3 +1,4 @@
+
 import { toast } from "sonner";
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
@@ -189,6 +190,10 @@ export const handleDoubt = async (
     console.log("Handling doubt:", doubt);
     console.log("Making request to Groq API for doubt resolution...");
     
+    // Add a timeout for the request to fail gracefully
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    
     const response = await fetch(GROQ_API_URL, {
       method: "POST",
       headers: {
@@ -218,7 +223,12 @@ Please provide a clear, detailed explanation addressing this doubt. Include rele
         temperature: 0.7,
         max_tokens: 1024
       }),
+      signal: controller.signal
     });
+    
+    clearTimeout(timeoutId);
+
+    console.log("Doubt response status:", response.status);
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -237,7 +247,11 @@ Please provide a clear, detailed explanation addressing this doubt. Include rele
 
   } catch (error: any) {
     console.error("Error handling doubt:", error);
-    toast.error(error.message || "Failed to get answer. Please try again.");
+    if (error.name === 'AbortError') {
+      toast.error("Request timed out. Please try again.");
+    } else {
+      toast.error(error.message || "Failed to get answer. Please try again.");
+    }
     return null;
   }
 };

@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { generateQuestion } from "@/services/groqService";
+import { generateQuestion, handleDoubt } from "@/services/groqService";
 import { toast } from "sonner";
 import { QuizResults } from "./QuizResults";
 import { NativeAd } from "./ads/NativeAd";
@@ -9,7 +9,8 @@ import { InArticleAd } from "./ads/InArticleAd";
 import { QuizAd } from "./ads/QuizAd";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle, SendHorizontal } from "lucide-react";
+import { Textarea } from "./ui/textarea";
 
 interface QuizProps {
   subject: string;
@@ -21,6 +22,7 @@ interface QuizProps {
   quizId?: string;
   simultaneousResults?: boolean;
   preloadedQuestions?: Question[];
+  enableDoubtChat?: boolean;
 }
 
 interface Question {
@@ -40,7 +42,8 @@ export const Quiz = ({
   timeLimit, 
   quizId,
   simultaneousResults = false,
-  preloadedQuestions = []
+  preloadedQuestions = [],
+  enableDoubtChat = false
 }: QuizProps) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
@@ -58,6 +61,12 @@ export const Quiz = ({
   const [retryAttempts, setRetryAttempts] = useState(0);
   const navigate = useNavigate();
 
+  // Doubt chat state
+  const [doubtQuestion, setDoubtQuestion] = useState("");
+  const [doubtAnswer, setDoubtAnswer] = useState<string | null>(null);
+  const [isSubmittingDoubt, setIsSubmittingDoubt] = useState(false);
+  const [showDoubtChat, setShowDoubtChat] = useState(false);
+
   console.log("Quiz props received:", { 
     subject, 
     chapter, 
@@ -66,7 +75,8 @@ export const Quiz = ({
     questionCount, 
     timeLimit, 
     quizId,
-    preloadedQuestionsLength: preloadedQuestions?.length 
+    preloadedQuestionsLength: preloadedQuestions?.length,
+    enableDoubtChat
   });
 
   // Initialize quiz with preloaded questions or fetch new ones
@@ -193,6 +203,9 @@ export const Quiz = ({
     
     setSelectedAnswer(null);
     setShowExplanation(false);
+    setDoubtQuestion("");
+    setDoubtAnswer(null);
+    setShowDoubtChat(false);
   }, [questionNumber, preloadedQuestions, chapter, topic, subject, difficulty, retryAttempts, navigate]);
 
   const handleAnswerSelect = (answer: string) => {
@@ -299,6 +312,32 @@ export const Quiz = ({
     }
   };
 
+  const handleSubmitDoubt = async () => {
+    if (!doubtQuestion.trim() || !currentQuestion) return;
+    
+    setIsSubmittingDoubt(true);
+    try {
+      const response = await handleDoubt(
+        doubtQuestion,
+        currentQuestion.question,
+        currentQuestion.options,
+        currentQuestion.correctAnswer,
+        currentQuestion.explanation
+      );
+      
+      if (response) {
+        setDoubtAnswer(response);
+      } else {
+        toast.error("Failed to get an answer. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting doubt:", error);
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsSubmittingDoubt(false);
+    }
+  };
+
   const formatTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -397,6 +436,62 @@ export const Quiz = ({
                 <NativeAd className="mt-6" />
               </div>
             )}
+
+            {/* Doubt Chat Section */}
+            {enableDoubtChat && (
+              <div className="mt-6">
+                <Button 
+                  onClick={() => setShowDoubtChat(!showDoubtChat)} 
+                  variant="outline" 
+                  className="mb-4"
+                >
+                  {showDoubtChat ? "Hide" : "Ask a"} Doubt
+                </Button>
+                
+                {showDoubtChat && (
+                  <div className="bg-gray-50 p-4 rounded-md">
+                    <h3 className="font-medium mb-2">Ask your doubt about this question</h3>
+                    <div className="space-y-4">
+                      <Textarea
+                        placeholder="Type your doubt or question here..."
+                        value={doubtQuestion}
+                        onChange={(e) => setDoubtQuestion(e.target.value)}
+                        className="w-full"
+                        rows={3}
+                      />
+                      
+                      <div className="flex justify-end">
+                        <Button 
+                          onClick={handleSubmitDoubt} 
+                          disabled={isSubmittingDoubt || !doubtQuestion.trim()}
+                          className="flex items-center gap-2"
+                        >
+                          {isSubmittingDoubt ? (
+                            <>
+                              <Loader2 className="h-4 w-4 animate-spin" /> 
+                              Processing...
+                            </>
+                          ) : (
+                            <>
+                              <SendHorizontal className="h-4 w-4" /> 
+                              Submit
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                      
+                      {doubtAnswer && (
+                        <div className="mt-4 p-4 bg-white rounded-md border border-gray-200">
+                          <h4 className="font-medium mb-2">Answer:</h4>
+                          <p className="text-gray-700 whitespace-pre-wrap">{doubtAnswer}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            
             <Button onClick={handleNext} className="mt-4">
               Next Question
             </Button>

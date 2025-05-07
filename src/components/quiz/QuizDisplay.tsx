@@ -136,6 +136,7 @@ export const QuizDisplay = ({
           quizId={quizId}
           simultaneousResults={true}
           preloadedQuestions={transformedQuestions}
+          enableDoubtChat={true}
         />
       ) : (
         <div className="text-center p-6 bg-white rounded-lg shadow-md">
