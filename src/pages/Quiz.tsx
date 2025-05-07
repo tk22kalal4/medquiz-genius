@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Quiz as QuizComponent } from "@/components/Quiz";
 import { Loader2 } from "lucide-react";
+import { QuizError } from "@/components/quiz/QuizError";
 
 const Quiz = () => {
   const { subject, chapter, topic } = useParams();
@@ -15,22 +16,34 @@ const Quiz = () => {
   const [questionCount, setQuestionCount] = useState("10");
   const [timeLimit, setTimeLimit] = useState("60");
   const [simultaneousResults, setSimultaneousResults] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Parse query parameters from URL
-    const searchParams = new URLSearchParams(location.search);
-    const difficultyParam = searchParams.get("difficulty");
-    const questionCountParam = searchParams.get("count");
-    const timeLimitParam = searchParams.get("time");
-    const simultaneousParam = searchParams.get("simultaneous");
+    try {
+      // Parse query parameters from URL
+      const searchParams = new URLSearchParams(location.search);
+      const difficultyParam = searchParams.get("difficulty");
+      const questionCountParam = searchParams.get("count");
+      const timeLimitParam = searchParams.get("time");
+      const simultaneousParam = searchParams.get("simultaneous");
 
-    if (difficultyParam) setDifficulty(difficultyParam);
-    if (questionCountParam) setQuestionCount(questionCountParam);
-    if (timeLimitParam) setTimeLimit(timeLimitParam);
-    if (simultaneousParam) setSimultaneousResults(simultaneousParam === "true");
+      if (difficultyParam) setDifficulty(difficultyParam);
+      if (questionCountParam) setQuestionCount(questionCountParam);
+      if (timeLimitParam) setTimeLimit(timeLimitParam);
+      if (simultaneousParam) setSimultaneousResults(simultaneousParam === "true");
 
-    setTimeout(() => setIsLoading(false), 500);
-  }, [location.search]);
+      // Check if the parameters are valid
+      if (!subject) {
+        setError("Missing subject parameter.");
+      }
+
+      setTimeout(() => setIsLoading(false), 500);
+    } catch (err) {
+      console.error("Error parsing quiz parameters:", err);
+      setError("There was an error loading the quiz. Please try again.");
+      setIsLoading(false);
+    }
+  }, [location.search, subject]);
 
   if (isLoading) {
     return (
@@ -38,6 +51,10 @@ const Quiz = () => {
         <Loader2 className="h-8 w-8 animate-spin text-medblue" />
       </div>
     );
+  }
+
+  if (error) {
+    return <QuizError message={error} />;
   }
 
   const decodedSubject = subject ? decodeURIComponent(subject) : "General Medicine";

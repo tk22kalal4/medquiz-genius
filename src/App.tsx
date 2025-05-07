@@ -2,6 +2,7 @@
 import {
   createBrowserRouter,
   RouterProvider,
+  createHashRouter,
 } from "react-router-dom";
 import Index from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -17,7 +18,9 @@ import BrowseQuizzes from "@/pages/BrowseQuizzes";
 import QuizResults from "@/pages/QuizResults";
 import Quiz from "@/pages/Quiz";
 
-const router = createBrowserRouter([
+// Use createHashRouter for GitHub Pages to prevent 404s on refresh
+// This is more compatible with GitHub Pages than BrowserRouter
+const router = createHashRouter([
   {
     path: "/",
     element: <Index />,

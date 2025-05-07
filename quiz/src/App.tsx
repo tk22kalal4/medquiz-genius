@@ -1,5 +1,5 @@
 
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { Toaster } from "@/components/ui/sonner";
 import NotFound from "@/pages/NotFound";
