@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { StarRating } from "@/components/StarRating";
 import { toast } from "sonner";
 import { Search, Book, Star, User, Calendar, ChevronRight } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Quiz {
   id: string;
@@ -31,6 +32,7 @@ const BrowseQuizzes = () => {
   const [accessCode, setAccessCode] = useState("");
   const [showAccessCodeInput, setShowAccessCodeInput] = useState(false);
   const [selectedQuizId, setSelectedQuizId] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<string>("rating"); // Default sort by rating
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -111,6 +113,22 @@ const BrowseQuizzes = () => {
     quiz.creator_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Sort quizzes based on selected sort method
+  const sortedQuizzes = [...filteredQuizzes].sort((a, b) => {
+    switch (sortBy) {
+      case "rating":
+        return b.average_rating - a.average_rating;
+      case "newest":
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      case "oldest":
+        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      case "questions":
+        return b.question_count - a.question_count;
+      default:
+        return b.average_rating - a.average_rating;
+    }
+  });
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString();
@@ -124,24 +142,39 @@ const BrowseQuizzes = () => {
         <div className="max-w-5xl mx-auto">
           <h1 className="text-3xl font-bold text-medblue mb-8">Browse User Quizzes</h1>
           
-          <form onSubmit={handleSearch} className="mb-8">
-            <div className="flex gap-2">
-              <Input
-                placeholder="Search quizzes by title, description or creator..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="flex-grow"
-              />
-              <Button type="submit" className="bg-medblue">
-                <Search className="h-4 w-4 mr-2" />
-                Search
-              </Button>
+          <div className="flex flex-col md:flex-row gap-4 mb-8">
+            <div className="flex gap-2 flex-1">
+              <form onSubmit={handleSearch} className="flex w-full gap-2">
+                <Input
+                  placeholder="Search quizzes by title, description or creator..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="flex-grow"
+                />
+                <Button type="submit" className="bg-medblue">
+                  <Search className="h-4 w-4 mr-2" />
+                  Search
+                </Button>
+              </form>
             </div>
-          </form>
+            <div className="min-w-[160px]">
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Sort by..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="rating">Highest Rated</SelectItem>
+                  <SelectItem value="newest">Newest</SelectItem>
+                  <SelectItem value="oldest">Oldest</SelectItem>
+                  <SelectItem value="questions">Most Questions</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
           
           {isLoading ? (
             <div className="text-center py-8">Loading quizzes...</div>
-          ) : filteredQuizzes.length === 0 ? (
+          ) : sortedQuizzes.length === 0 ? (
             <div className="text-center py-8">
               No quizzes found matching your search.
             </div>
@@ -161,7 +194,7 @@ const BrowseQuizzes = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredQuizzes.map((quiz) => (
+                      {sortedQuizzes.map((quiz) => (
                         <TableRow key={quiz.id}>
                           <TableCell className="font-medium">
                             <div className="flex flex-col">

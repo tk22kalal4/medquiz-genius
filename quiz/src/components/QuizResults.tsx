@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trophy } from "lucide-react";
@@ -12,6 +13,7 @@ interface QuizResultsProps {
   chapter: string;
   topic: string;
   difficulty: string;
+  quizId?: string;
 }
 
 export const QuizResults = ({ 
@@ -21,9 +23,11 @@ export const QuizResults = ({
   subject,
   chapter,
   topic,
-  difficulty
+  difficulty,
+  quizId
 }: QuizResultsProps) => {
   const [userName, setUserName] = useState<string>("");
+  const [hasRated, setHasRated] = useState(false);
   const percentage = Math.round((score / totalQuestions) * 100);
   
   useEffect(() => {
@@ -39,6 +43,18 @@ export const QuizResults = ({
             .single();
           
           setUserName(userData?.name || 'User');
+          
+          // Check if the user has already rated this quiz
+          if (quizId) {
+            const { data: ratingData } = await supabase
+              .from('quiz_ratings')
+              .select('*')
+              .eq('quiz_id', quizId)
+              .eq('user_id', user.id)
+              .single();
+              
+            setHasRated(!!ratingData);
+          }
         }
       } catch (error: any) {
         console.error('Error fetching user name:', error);
@@ -46,7 +62,11 @@ export const QuizResults = ({
     };
     
     fetchUserName();
-  }, []);
+  }, [quizId]);
+  
+  const handleRatingChange = (newRating: number) => {
+    setHasRated(true);
+  };
   
   return (
     <div className="max-w-2xl mx-auto p-6">
@@ -69,16 +89,37 @@ export const QuizResults = ({
           <div className="text-2xl text-gray-600">
             {percentage}% Correct
           </div>
+          
+          {quizId && quizId !== "generated-quiz" && (
+            <div className="mt-8">
+              <h3 className="text-lg font-medium mb-2">Rate this Quiz</h3>
+              <div className="flex justify-center">
+                <div className="flex items-center gap-2">
+                  <div className="flex justify-center">
+                    <StarRating 
+                      quizId={quizId} 
+                      readOnly={hasRated} 
+                      onRated={handleRatingChange}
+                    />
+                  </div>
+                  {hasRated && <span className="text-sm text-gray-500">Thank you for rating!</span>}
+                </div>
+              </div>
+            </div>
+          )}
+          
           <div className="space-y-2">
             <p className="text-gray-600">
               Keep practicing to improve your medical knowledge.
             </p>
-            <Button 
-              onClick={onRestartQuiz}
-              className="mt-4 bg-medical-blue hover:bg-medical-blue/90"
-            >
-              Start New Quiz
-            </Button>
+            {onRestartQuiz && (
+              <Button 
+                onClick={onRestartQuiz}
+                className="mt-4 bg-medical-blue hover:bg-medical-blue/90"
+              >
+                Start New Quiz
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>

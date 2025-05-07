@@ -5,6 +5,7 @@ import { Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { StarRating } from "@/components/StarRating";
 
 interface QuizResultsProps {
   score: number;
@@ -36,6 +37,7 @@ export const QuizResults = ({
   const [calculatedScore, setCalculatedScore] = useState<number>(score);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [hasRated, setHasRated] = useState(false);
   const percentage = Math.round((calculatedScore / totalQuestions) * 100);
   
   useEffect(() => {
@@ -43,6 +45,7 @@ export const QuizResults = ({
       score,
       totalQuestions,
       answers,
+      quizId,
       questions: questions?.map(q => ({ 
         question: q.question,
         correctAnswer: q.correctAnswer
@@ -83,6 +86,18 @@ export const QuizResults = ({
           
           if (userData) {
             setUserName(userData.name || 'User');
+          }
+          
+          // Check if the user has already rated this quiz
+          if (quizId && quizId !== "generated-quiz") {
+            const { data: ratingData } = await supabase
+              .from('quiz_ratings')
+              .select('*')
+              .eq('quiz_id', quizId)
+              .eq('user_id', user.id)
+              .single();
+              
+            setHasRated(!!ratingData);
           }
         }
         
@@ -128,6 +143,10 @@ export const QuizResults = ({
     fetchUserDataAndRankings();
   }, [quizId, score, totalQuestions, questions, answers]);
   
+  const handleRatingChange = (newRating: number) => {
+    setHasRated(true);
+  };
+  
   return (
     <div className="max-w-2xl mx-auto p-6">
       <Card className="text-center mt-16">
@@ -149,6 +168,22 @@ export const QuizResults = ({
           <div className="text-2xl text-gray-600">
             {percentage}% Correct
           </div>
+          
+          {quizId && quizId !== "generated-quiz" && (
+            <div className="mt-6">
+              <h3 className="text-lg font-medium mb-2">Rate this Quiz</h3>
+              <div className="flex justify-center">
+                <div className="flex items-center gap-2">
+                  <StarRating 
+                    quizId={quizId} 
+                    readOnly={hasRated}
+                    onRated={handleRatingChange}
+                  />
+                  {hasRated && <span className="text-sm text-gray-500">(Already rated)</span>}
+                </div>
+              </div>
+            </div>
+          )}
           
           {questions.length > 0 && (
             <div className="mt-4">

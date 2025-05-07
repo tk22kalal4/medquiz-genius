@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Quiz as QuizComponent } from "@/components/Quiz";
 import { Loader2 } from "lucide-react";
 import { QuizError } from "@/components/quiz/QuizError";
+import { StarRating } from "@/components/StarRating";
 
 const Quiz = () => {
   const { subject, chapter, topic } = useParams();
