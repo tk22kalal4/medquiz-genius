@@ -1,4 +1,3 @@
-
 import { toast } from "sonner";
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
@@ -82,6 +81,10 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
     console.log("Random seed:", randomSeed);
     console.log("Making request to Groq API...");
     
+    // Add a timeout for the request to fail gracefully
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    
     const response = await fetch(GROQ_API_URL, {
       method: "POST",
       headers: {
@@ -93,11 +96,11 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
         messages: [
           {
             role: "system",
-            content: `You are a medical expert specializing in NEET PG, FMGE, and INICET exam preparation. ${getDifficultyPrompt(difficulty)} Make sure to generate a high-yield topics question based on latest patter and syllabus. Avoid repetition from previous questions. IMPORTANT: Your response MUST be valid JSON format with no markdown or other formatting.`
+            content: `You are a medical expert specializing in NEET PG, FMGE, and INICET exam preparation. ${getDifficultyPrompt(difficulty)} Make sure to generate a high-yield topics question based on latest pattern and syllabus. Avoid repetition from previous questions. IMPORTANT: Your response MUST be valid JSON format with no markdown or other formatting.`
           },
           {
             role: "user",
-            content: `Generate a ${difficulty} level multiple choice question about ${questionType} in ${scope}. The question should be high-yeild topic based on NEET-PG and INICET. Include different-different types of question but medically accurate details to ensure variation. Use seed: ${randomSeed} for uniqueness. Format the response in VALID JSON with the following structure EXACTLY:
+            content: `Generate a ${difficulty} level multiple choice question about ${questionType} in ${scope}. The question should be high-yield topic based on NEET-PG and INICET. Include different types of question but medically accurate details to ensure variation. Use seed: ${randomSeed} for uniqueness. Format the response in VALID JSON with the following structure EXACTLY:
             {
               "question": "question text",
               "options": ["A) option1", "B) option2", "C) option3", "D) option4"],
@@ -108,11 +111,14 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
             Do not include any markdown, code blocks, or other formatting in your response - just the raw JSON object.`
           }
         ],
-        temperature: 0.95,
+        temperature: 0.7,
         max_tokens: 1024
       }),
+      signal: controller.signal
     });
-
+    
+    clearTimeout(timeoutId);
+    
     console.log("Response status:", response.status);
     
     if (!response.ok) {
@@ -137,6 +143,14 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
       
       const questionData = JSON.parse(cleanedContent);
       console.log("Successfully parsed question data:", questionData);
+      
+      // Validate the question data structure
+      if (!questionData.question || !Array.isArray(questionData.options) || 
+          questionData.options.length !== 4 || !questionData.correctAnswer || 
+          !questionData.explanation) {
+        throw new Error("Invalid question format received from API");
+      }
+      
       return questionData as Question;
     } catch (parseError) {
       console.error("Error parsing API response:", parseError);
@@ -146,7 +160,11 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
     }
   } catch (error: any) {
     console.error("Error generating question:", error);
-    toast.error(error.message || "Failed to generate question. Please check your API key and try again.");
+    if (error.name === 'AbortError') {
+      toast.error("Request timed out. Please try again.");
+    } else {
+      toast.error(error.message || "Failed to generate question. Please check your API key and try again.");
+    }
     return null;
   }
 };

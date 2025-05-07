@@ -58,16 +58,31 @@ export const Quiz = ({
   const [retryAttempts, setRetryAttempts] = useState(0);
   const navigate = useNavigate();
 
+  console.log("Quiz props received:", { 
+    subject, 
+    chapter, 
+    topic, 
+    difficulty, 
+    questionCount, 
+    timeLimit, 
+    quizId,
+    preloadedQuestionsLength: preloadedQuestions?.length 
+  });
+
   // Initialize quiz with preloaded questions or fetch new ones
   useEffect(() => {
+    console.log("Quiz component mounted, preloadedQuestions:", preloadedQuestions?.length);
+    
     if (preloadedQuestions && preloadedQuestions.length > 0) {
+      console.log("Using preloaded questions:", preloadedQuestions);
       setQuestions(preloadedQuestions);
       setCurrentQuestion(preloadedQuestions[0]);
       setIsLoading(false);
     } else {
+      console.log("No preloaded questions, generating a new one");
       loadQuestion();
     }
-  }, [preloadedQuestions]);
+  }, []);
 
   useEffect(() => {
     if (timeRemaining !== null && timeRemaining > 0) {
@@ -107,9 +122,16 @@ export const Quiz = ({
   const loadQuestion = useCallback(async () => {
     if (preloadedQuestions && preloadedQuestions.length > 0) {
       // For preloaded quiz, just move to the next question in the array
+      console.log("Loading preloaded question for number:", questionNumber);
+      console.log("Available preloaded questions:", preloadedQuestions.length);
+      
       if (questionNumber <= preloadedQuestions.length) {
         setCurrentQuestion(preloadedQuestions[questionNumber - 1]);
         setIsLoading(false);
+        return;
+      } else {
+        console.log("Question number exceeds available preloaded questions");
+        setIsQuizComplete(true);
         return;
       }
     } else {
@@ -118,17 +140,30 @@ export const Quiz = ({
       setLoadError(null);
       
       try {
+        // Check if GROQ API key exists in localStorage
+        const apiKey = localStorage.getItem("groq_api_key");
+        if (!apiKey) {
+          console.log("No GROQ API key found, redirecting to API key input page");
+          toast.error("API key not found. Please enter your GROQ API key first.");
+          navigate("/apikey", { state: { redirectTo: `/quiz/${subject}/${chapter}/${topic}` } });
+          return;
+        }
+        
         const topicString = topic ? `${chapter} - ${topic}` : chapter;
         const scope = chapter === "Complete Subject" ? subject : `${subject} - ${topicString}`;
+        console.log("Generating question with scope:", scope);
+        
         const newQuestion = await generateQuestion(scope, difficulty);
         
         if (newQuestion) {
+          console.log("Question generated successfully:", newQuestion);
           setCurrentQuestion(newQuestion);
           // Add to questions array for result tracking
           setQuestions(prev => [...prev, newQuestion]);
           setIsLoading(false);
         } else {
           // If API returned null but no error was thrown
+          console.error("Failed to generate question - null result");
           throw new Error("Failed to generate question");
         }
       } catch (error: any) {
@@ -158,10 +193,11 @@ export const Quiz = ({
     
     setSelectedAnswer(null);
     setShowExplanation(false);
-  }, [questionNumber, preloadedQuestions, chapter, topic, subject, difficulty, retryAttempts]);
+  }, [questionNumber, preloadedQuestions, chapter, topic, subject, difficulty, retryAttempts, navigate]);
 
   const handleAnswerSelect = (answer: string) => {
     if (!selectedAnswer && timeRemaining !== 0) {
+      console.log("Answer selected:", answer);
       setSelectedAnswer(answer);
       
       // Track user's answer for this question
@@ -171,13 +207,19 @@ export const Quiz = ({
       }));
       
       if (answer === currentQuestion?.correctAnswer) {
+        console.log("Correct answer!");
         setScore(prev => prev + 1);
+      } else {
+        console.log("Incorrect answer. Correct was:", currentQuestion?.correctAnswer);
       }
     }
   };
 
   const handleNext = async () => {
+    console.log("Moving to next question. Current:", questionNumber, "Total:", questionCount);
+    
     if (questionCount !== "No Limit" && questionNumber >= parseInt(questionCount)) {
+      console.log("Quiz complete!");
       setIsQuizComplete(true);
       
       try {
@@ -185,6 +227,7 @@ export const Quiz = ({
         const { data: { user } } = await supabase.auth.getUser();
         
         if (user) {
+          console.log("Saving quiz result for user:", user.id);
           const { data: userData } = await supabase
             .from('profiles')
             .select('name')
@@ -209,9 +252,14 @@ export const Quiz = ({
           if (resultData && resultData.id) {
             // Navigate to results page if not showing results immediately
             if (!simultaneousResults) {
+              console.log("Navigating to results page:", resultData.id);
               navigate(`/quiz/results/${resultData.id}`);
               return;
             }
+          }
+          
+          if (error) {
+            console.error("Error saving quiz result:", error);
           }
         }
       } catch (error) {
@@ -227,11 +275,13 @@ export const Quiz = ({
   };
 
   const handleRetry = () => {
+    console.log("Retrying question load");
     setRetryAttempts(0);
     loadQuestion();
   };
 
   const handleRestartQuiz = () => {
+    console.log("Restarting quiz");
     setScore(0);
     setQuestionNumber(1);
     setIsQuizComplete(false);

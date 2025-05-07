@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Quiz } from "@/components/Quiz";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
 
 interface QuizDisplayProps {
   quizTitle: string;
@@ -61,20 +61,29 @@ export const QuizDisplay = ({
     if (formattedQuestions.length > 0) {
       setLoading(false);
       setError(null);
+      console.log("Questions loaded successfully:", formattedQuestions.length);
+    } else {
+      console.log("No questions available in formattedQuestions array");
+      if (!loading) {
+        setError("No questions available for this quiz.");
+      }
     }
-  }, [formattedQuestions]);
+  }, [formattedQuestions, loading]);
 
   const handleRetry = () => {
     setRetryCount(prev => prev + 1);
     setLoading(true);
     setError(null);
+    toast.info("Retrying to load questions...");
     
     // Simulate a delay before retrying
     setTimeout(() => {
       if (formattedQuestions.length > 0) {
         setLoading(false);
+        toast.success("Questions loaded successfully!");
       } else {
         setError("Still unable to load questions. Please try again later.");
+        toast.error("Failed to load questions.");
       }
     }, 2000);
   };
@@ -88,10 +97,11 @@ export const QuizDisplay = ({
     );
   }
 
-  if (error) {
+  if (error || formattedQuestions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-12">
-        <p className="text-center text-lg text-red-500 mb-4">{error}</p>
+        <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
+        <p className="text-center text-lg text-red-500 mb-4">{error || "No questions available for this quiz."}</p>
         <Button onClick={handleRetry} className="bg-medblue hover:bg-medblue/90">
           Retry Loading Questions
         </Button>
@@ -115,7 +125,7 @@ export const QuizDisplay = ({
         </div>
       </Card>
       
-      {formattedQuestions.length > 0 ? (
+      {transformedQuestions.length > 0 ? (
         <Quiz
           subject={quizTitle}
           chapter="Custom Quiz"
